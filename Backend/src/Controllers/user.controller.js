@@ -3,6 +3,8 @@ import { apiError } from "../Utils/apiError.js";
 import { apiResponse } from "../Utils/apiResponse.js";
 import { User } from "../Models/user.model.js";
 import { cloudnaryUpload } from "../Utils/cloudinary.js";
+import jwt from 'jsonwebtoken'
+import mongoose from "mongoose";
 
 
 const registerUser = asyncHandler(async(req,res)=>{
@@ -143,8 +145,185 @@ const logoutUser =asyncHandler(async(req,res)=>{
     )
 })
 
+const refreshaccessToken = asyncHandler(async(req,res)=>{
+
+    const inconimgRefreshToken = req.cookie?.refreshToken || req.body.refreshToken
+    if(!inconimgRefreshToken){
+        throw new apiError(404,'Unauthorized request')
+    }
+
+    try {
+        const token =jwt.verify(inconimgRefreshToken,process.env.REFRESH_TOKEN_SERET)
+    
+        if(!token){
+            throw new apiError(404,'Token is not valid')
+        }
+    
+        const id = token._id
+        const isUser = await User.findById(id)
+        if(inconimgRefreshToken !==isUser?.refreshToken){
+            throw new apiError(404,'Invalid refresh token')
+        }
+        
+        const accessToken=await isUser.generateAccessToken()
+        const refreshToken=await isUser.generateRefreshTokenToken()
+        if(!accessToken && !refreshToken){
+            throw new apiError(500,'Error while generating tokens')
+        }
+        isUser.refreshToken=refreshToken
+        await isUser.save({validateBeforeSave:false})
+    
+        const options = {
+            httpOnly:true,
+            secure:true
+        }
+        return res.status(200)
+        .cookie('accessToken',accessToken,options)
+        .cookie('refreshToken',refreshToken,options)
+        .json(new apiResponse(
+            200,
+            {accessToken,refreshToken},
+            'Access Token Fetched Successfully'
+        ))
+    } catch (error) {
+        throw new apiError(404,'Invalid Refresh Token')
+    }
+})
+
+const getChannelDetail = asyncHandler(async(req,res)=>{
+
+    const {userName} = req.params
+
+    if(!userName?.trim()){
+        throw new apiError(404,'Username not found')
+    }
+
+    const channel =await User.aggregate([
+        {
+            $match:{
+                userName:userName.trim()
+            }
+        },
+        {
+            $lookup:{
+                from:"subscriptions",
+                localField:'_id',
+                foreignField:'channel',
+                as:'subscribers'
+            }
+        },
+        {
+            $lookup:{
+                from:'subscriptions',
+                localField:'_id',
+                foreignField:'subscriber',
+                as:'subscribedTo'
+            }
+        },
+        {
+            $addFields:{
+                subscriberCount:{
+                    $size:"$subscribers"
+                },
+                channelSubscribedToCount:{
+                    $size:"$subscribedTo"
+                },
+                isSubscriber:{
+                    $cond:{
+                        $if:{
+                            $in:[
+                                req.user?._id,"$subscribers.subscribe"
+                            ]
+                        },
+                        then:true,
+                        else:false
+                    }
+                }
+            }
+        },
+        {
+            $project:{
+                userName:1,
+                fullName:1,
+                email:1,
+                avatar:1,
+                coverImage:1,
+                subscriberCount:1,
+                channelSubscribedToCount:1,
+                isSubscriber:1
+            }
+        }
+    ])
+
+    if(!channel?.length){
+        throw new apiError(404,'Channel not exist')
+    }
+    return res.status(200)
+    .json(
+        new apiResponse(
+            200,
+            channel[0],
+            "Account fetched successfully"
+        )
+    )
+})
+
+const getWatchHistory = asyncHandler(async(req,res)=>{
+
+    const user = await User.aggregate([
+        {
+            $match:{
+                _id:new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        {
+            $lookup:{
+                from:"videos",
+                localField:'watchHistory',
+                foreignField:'_id',
+                as:'watchHistory',
+                pipeline:[
+                    {
+                       $lookup:{
+                        from:'users',
+                        localField:'owner',
+                        foreignField:'_id',
+                        as:'owner',
+                        pipeline:[
+                            {
+                               $project:{
+                                userName:1,
+                                fullName:1,
+                                avatar:1
+                               } 
+                            }
+                        ]
+                       } 
+                    },
+                    {
+                        $addFields:{
+                            owner:{
+                                $first:"$owner"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    return res.status(200)
+    .json(new apiResponse(
+        200,
+        user[0].watchHistory,
+        'WatchHistory Fetched Successfully'
+    ))
+})
 export {
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    refreshaccessToken,
+    getChannelDetail,
+    getWatchHistory
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, logoutUser, registerUser } from "../Controllers/user.controller.js";
+import { getChannelDetail, getWatchHistory, loginUser, logoutUser, refreshaccessToken, registerUser } from "../Controllers/user.controller.js";
 import { upload } from "../Middleware/multer.middleware.js";
 import { verifyLogin } from "../Middleware/auth.middleware.js";
 
@@ -18,4 +18,7 @@ userRouter.route('/register').post(upload.fields([
 
 userRouter.route('/login').post(loginUser)
 userRouter.route('/logout').post(verifyLogin,logoutUser)
+userRouter.route('/refreshToken').post(refreshaccessToken)
+userRouter.route('/c/:userName').get(verifyLogin,getChannelDetail)
+userRouter.route('/watch-history').get(verifyLogin,getWatchHistory)
 export {userRouter}
