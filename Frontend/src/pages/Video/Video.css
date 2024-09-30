@@ -1,0 +1,197 @@
+
+
+.video{
+    width: 100%;
+    height: 91vh;
+    overflow-y: auto;
+    display: flex;
+    gap: 2%;
+    padding: 1%;
+    background-color: rgba(0, 0, 0, 0.871);
+}
+
+.video::-webkit-scrollbar{
+    display: none;
+}
+
+.video-center{
+    width: 66%;
+    height: 100%;
+}
+
+.video-side{
+    width: 32%;
+    min-height: 100%;
+}
+.video-play{
+    width:100%;
+    height: max(55%,30vw);
+    border-radius: 15px;
+    overflow: hidden;
+}
+.video-play video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.comps{
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px;
+    justify-content: space-between;
+}
+
+.comps .comps-title{
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.comments{
+    width: 100%;
+    height: 30%;
+    overflow: auto;
+    margin-bottom: 20px;
+}
+
+.comments::-webkit-scrollbar{
+    display: none;
+}
+.comp-lower {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.comp-lower .avatar{
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.403);
+    border-radius: 50%;
+    overflow: hidden;
+}
+.comp-lower .avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.comps-userName{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 7px;
+    min-width: 120px;
+}
+.comps-userName p{
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.486);
+    position: relative;
+}
+.chanel-subs{
+    display: flex;
+    gap: 5px;
+}
+.subscribed{
+    background-color: rgba(255, 255, 255, 0.192);
+}
+.comp-lower button{
+    padding: 1px 6px;
+    height: 30px;
+    position: relative;
+    align-self: flex-end;
+    margin-left: 30px;
+    border: none;
+    border-radius: 15px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.705);
+}
+.lower-left{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.lower-right{
+    display: flex;
+    align-items: center;
+}
+.lower-right .like-dis{
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    gap: 5px;
+    border: none;
+    border-radius: 10px;
+    padding: 2px 10px;
+    background-color:rgb(32, 31, 31) ;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.241);
+    margin-left: 5px;
+    margin-top: 15px;
+}
+.lower-right .like-dis p{
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.355);
+}
+.description{
+    width: 100%;
+    height: 100px;
+    position: relative;
+    padding: 10px;
+}
+.desc-message{
+    width: 100%;
+    height: 90%;
+    overflow: hidden;
+}
+.desc-message p{
+    text-align: left;
+}
+.more{
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+}
+
+@media (max-width:800px){
+    .video{
+        flex-direction: column;
+        gap: 60px;
+    }
+    .video-center{
+        width: 95%;
+        margin: auto;
+    }
+    .video-side{
+        width: 92%;
+        margin: auto;
+        margin-top: 5px;
+    }
+    .comp-lower{
+        flex-direction: column;
+        width: 100%;
+        margin: auto;
+    }
+    .lower-right{
+        width: 100%;
+        justify-content: space-around;
+    }
+    .lower-left{
+        width: 100%;
+        position: relative;
+    }
+    .downlod-icon::after{
+        content: 'Download';
+        font-size: 15px;
+    }
+    .subscribe-btn{
+        position: absolute;
+        right: 0%;
+    }
+    .comps .comps-title{
+        margin-bottom: 10px;
+    }
+}

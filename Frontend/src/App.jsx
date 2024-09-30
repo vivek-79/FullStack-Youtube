@@ -3,17 +3,10 @@ import axios from "axios"
 import './App.css'
 
 function App() {
-  
-  const [inpt,setInpt] =useState('')
-  useEffect(()=>{
-    axios.get('/api/login')
-    .then((res)=>{
-      setInpt(res.data)
-    })
-  })   
+ 
   return (
     <>
-     <h1>{inpt}</h1>
+     <h1>Hii</h1>
     </>
   )
 }

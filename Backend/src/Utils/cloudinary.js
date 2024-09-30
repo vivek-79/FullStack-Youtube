@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs'
 import {apiError} from './apiError.js'
+import { error } from 'console';
 
 const cloudnaryUpload =async(localFilePath)=>{
     cloudinary.config({ 
@@ -17,11 +18,21 @@ const cloudnaryUpload =async(localFilePath)=>{
         if(!upload) throw new apiError(502,"Error While Uploading Image")
         fs.unlinkSync(localFilePath)
         console.log('File Uploaded On Cloudinary',upload.url)
-        return upload.url
+        return upload
     } catch (error) {
         fs.unlinkSync(localFilePath)
         return null
     }
 }
+const cloudnaryDelete =async(publicId)=>{
+    try {
+        if(!publicId) return null
+         await cloudinary.uploader.destroy(publicId,(error,result)=>{
+            console.log(result,error)
+        })
+    } catch (error) {
+        return null
+    }
+}
 
-export {cloudnaryUpload}
+export {cloudnaryUpload,cloudnaryDelete}

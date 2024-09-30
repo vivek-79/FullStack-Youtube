@@ -44,8 +44,8 @@ const registerUser = asyncHandler(async(req,res)=>{
         fullName,
         userName:userName.toLowerCase(),
         email,
-        avatar,
-        coverImage,
+        avatar:avatar.url,
+        coverImage:coverImage.url,
         password
     })
     
@@ -122,7 +122,9 @@ const logoutUser =asyncHandler(async(req,res)=>{
     await  User.findByIdAndUpdate(
         id,
         {
-            $set:{refreshToken:undefined}
+            $unset:{
+                refreshToken:1
+            }
         },
         {
             new:true
@@ -192,8 +194,8 @@ const refreshaccessToken = asyncHandler(async(req,res)=>{
 
 const getChannelDetail = asyncHandler(async(req,res)=>{
 
-    const {userName} = req.params
-
+    const {userName,userId} = req.body
+    console.log(req.body)
     if(!userName?.trim()){
         throw new apiError(404,'Username not found')
     }
@@ -230,9 +232,9 @@ const getChannelDetail = asyncHandler(async(req,res)=>{
                 },
                 isSubscriber:{
                     $cond:{
-                        $if:{
+                        if:{
                             $in:[
-                                req.user?._id,"$subscribers.subscribe"
+                                new mongoose.Types.ObjectId(userId),{$map:{input:'$subscribers',as:'sub',in:'$$sub.subscriber'}}
                             ]
                         },
                         then:true,

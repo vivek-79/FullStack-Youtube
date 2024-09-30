@@ -1,0 +1,80 @@
+
+.card{
+    width: max(23vw,250px);
+    height: max(270px,16vw);
+    padding: 0%;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.card-upper{
+    height: 200px;
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    object-position: center;
+}
+.card-upper .video{
+    display: none;
+}
+.card-upper img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0 15px 15px 15px;
+}
+.card-lower{
+    height: 22%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding:2px 5px 0 1px;
+    flex-wrap: nowrap;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    overflow: hidden;
+    position: relative;
+}
+.card-lower .card-avatar{
+    width: 35px;
+    height: 35px;
+    border: 1px solid white;
+    position: absolute;
+    top: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.card-lower .card-avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.card-title{
+    font-size: 17px;
+    font-weight: 600;
+    text-align: left;
+    position: relative;
+    margin-left: 42px;
+}
+.card-channel,.card-info{
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.437);
+    text-align: left;
+    position: relative;
+    margin-left: 42px;
+}
+.card-info{
+    font-size: 13px;
+    line-height: 15px;
+}
+
+@media (max-width:530px){
+    .card{
+        width: 80%;
+        margin: auto;
+    }
+}

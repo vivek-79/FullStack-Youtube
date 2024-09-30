@@ -1,0 +1,17 @@
+
+nav{
+    height: 40px;
+    margin-top: 5px;
+    display: flex;
+    padding: 0 10px;
+    gap: 10px;
+    overflow: auto;
+}
+nav::-webkit-scrollbar{
+    display: none;
+}
+.nav-options{
+    background-color: rgb(32, 31, 31);
+    padding: 8px 10px;
+    border-radius: 10px;
+}
