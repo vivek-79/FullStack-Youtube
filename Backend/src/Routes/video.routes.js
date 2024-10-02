@@ -9,7 +9,7 @@ const videoRoute=Router()
 
 videoRoute.use(verifyLogin)
 
-videoRoute.route('/').post(upload.fields(
+videoRoute.route('/upload').post(upload.fields(
     [
         {
             name:'thumbnail',

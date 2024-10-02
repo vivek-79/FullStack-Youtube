@@ -1,40 +1,36 @@
 
-
 import React, { useState } from 'react'
-import './Upload.css'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-function Upload() {
+import { useNavigate} from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
+function UploadShort() {
+
+    const userInfo = useSelector((state) => state.authState.userData)
+    const userId = userInfo?.data?.user?._id
     const { register, handleSubmit } = useForm()
     const navigate= useNavigate()
     const [err,setErr]=useState('')
     const upload=(data)=>{
         const formData = new FormData()
-        formData.append('videoFile',data.video[0])
-        formData.append('thumbnail',data.thumbnail[0])
+        formData.append('userId',userId)
+        formData.append('short',data.video[0])
         formData.append('title',data.title)
         formData.append('description',data.description)
         formData.append('isPublished',data.isPublished)
-
-        for (let pair of formData.entries()) {
-            console.log(`${pair[0]}: ${pair[1]}`);
-          }
-        console.log(data)
-        axios.post('/v1/videos/upload',formData,{
-            headers:{
-            }
-        })
+//title,description,isPublished,userId
+        axios.post('/v1/short/upload',formData)
         .then((res)=>{
+            console.log(res)
             navigate('/home')
         })
         .catch((error)=>{
             setErr(error.message)
         });
     }
-    return (
-        <div className='upload'>
+   return (
+    <div className='upload'>
             <form
             onSubmit={handleSubmit(upload)}
             >
@@ -47,16 +43,6 @@ function Upload() {
                     />
                     <i className="ri-upload-cloud-line"></i>
                     <label htmlFor="video">Video</label>
-                </div>
-                <div className="file">
-                    <input type="file" 
-                    id='thumbnail'
-                    name='thumbnail'
-                    required
-                    {...register('thumbnail')}
-                    />
-                    <i className="ri-upload-cloud-line"></i>
-                    <label htmlFor="thumbnail">Thumbnail</label>
                 </div>
                 <div className="form-input">
                     <label htmlFor="title">Title</label>
@@ -92,4 +78,4 @@ function Upload() {
     )
 }
 
-export default Upload
+export default UploadShort

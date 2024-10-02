@@ -21,7 +21,6 @@ function Home() {
       console.error(err.message);
     });
   },[]);
-  console.log(data)
   return (
     <div className='space-nav'>
         <div className='home'>

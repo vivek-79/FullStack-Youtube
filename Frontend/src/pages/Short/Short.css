@@ -4,6 +4,14 @@
     width: 100%;
     height: 90vh;
     padding: 2vw;
+    overflow-y: auto;
+}
+.shorts::-webkit-scrollbar{
+    width: 2px;
+    background-color: aliceblue;
+}
+.shorts::-webkit-scrollbar-thumb{
+    background-color: rgba(0, 0, 0, 0.404);
 }
 .short-content{
     width: min(100%,320px);
@@ -11,6 +19,7 @@
     margin: auto;
     padding: 20px 0 0 0;
     position: relative;
+    margin-bottom: 15px;
 }
 
 .short-video-content{
@@ -25,6 +34,24 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
+}
+ #short-btn{
+    position: absolute;
+    color:rgba(255, 255, 255, 0.512);
+    right: 120px;
+    font-size: 50px;
+}
+.short-mute{
+    position: absolute;
+    top: -250px;
+    border: 1px solid;
+    border-radius: 50%;
+    font-size: 25px;
+    padding: 5px 0;
+    z-index: 999;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.207);
 }
 .short-info{
     width: 100%;
@@ -82,4 +109,9 @@
     margin-left: 10px;
     border-radius: 50%;
     flex-shrink: 0;
+    overflow: hidden;
+}
+.short-avatar img{
+    width: 100%;
+    object-fit: cover;
 }

@@ -2,7 +2,9 @@ import { asyncHandler } from "../Utils/asyncHandler.js";
 import { apiError } from "../Utils/apiError.js";
 import { apiResponse } from "../Utils/apiResponse.js";
 import { User } from "../Models/user.model.js";
+import { likeCount } from "./likes.controller.js";
 import { cloudnaryUpload } from "../Utils/cloudinary.js";
+import { Comment } from "../Models/comment.model.js";
 import jwt from 'jsonwebtoken'
 import mongoose from "mongoose";
 
@@ -194,7 +196,7 @@ const refreshaccessToken = asyncHandler(async(req,res)=>{
 
 const getChannelDetail = asyncHandler(async(req,res)=>{
 
-    const {userName,userId} = req.body
+    const {userName,userId,videoId} = req.body
     console.log(req.body)
     if(!userName?.trim()){
         throw new apiError(404,'Username not found')
@@ -256,6 +258,17 @@ const getChannelDetail = asyncHandler(async(req,res)=>{
             }
         }
     ])
+
+    const comments =await Comment.find({video:videoId}).select('-user -video')
+    if(!comments){
+        throw new apiError(404,'No comments found')
+    }
+    channel[0].comments=comments
+    if(videoId){
+        const {likes,isLiked} = await likeCount(videoId,userId)
+        channel[0].totalLikes=likes
+        channel[0].isLiked=isLiked
+    }
 
     if(!channel?.length){
         throw new apiError(404,'Channel not exist')

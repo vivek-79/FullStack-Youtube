@@ -1,32 +1,28 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import './Short.css'
+import { ShortComp } from '../../components'
 
 function Short() {
+    ///get-shorts
+
+    const [data,setData]= useState([])
+    useEffect(()=>{
+        axios.get(`/v1/short/get-shorts`)
+            .then((res) => {
+                console.log(res.data.data)
+                setData(res.data.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    },[])
   return (
     <div className='shorts'>
-        <div className="short-content">
-            <div className="short-video-content"></div>
-            <div className="short-info">
-                <div className="user-info">
-                    <div className="short-avatar"></div>
-                    <div className="user-name">
-                        <p>Username</p>
-                    </div>
-                    <button>Subscribe</button>
-                </div>
-                <div className="short-title">
-                    <p>Funny comedy scene</p>
-                </div>
-            </div>
-            <div className="content-comps">
-                <i className="ri-thumb-up-line"></i>
-                <i className="ri-thumb-down-line"></i>
-                <i className="ri-messenger-line"></i>
-                <i className="ri-share-forward-line"></i>
-                <i className="ri-list-check cont-list"></i>
-            </div>
-        </div>
+        {data ?.map((data)=>(
+            <ShortComp key={data.short} data={data}/>
+        ))}
     </div>
   )
 }

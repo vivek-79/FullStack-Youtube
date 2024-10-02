@@ -5,6 +5,7 @@ import Login from './Login/Login.jsx'
 import Video from './Video/Video.jsx'
 import Upload from './Upload/Upload.jsx'
 import Short from './Short/Short.jsx'
+import UploadShort from './UploadShort/UploadShort.jsx'
 
 export {
     Register,
@@ -12,5 +13,6 @@ export {
     Login,
     Video,
     Upload,
-    Short
+    Short,
+    UploadShort
 }

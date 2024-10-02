@@ -82,6 +82,7 @@ header {
     padding: 0 10px;
     display: flex;
     gap: 10px;
+    position: relative;
 }
 .header-side2 i{
     font-size: 20px;
@@ -102,4 +103,28 @@ header {
 .links{
     text-decoration: none;
     color:rgba(255, 255, 255, 0.7) ;
+}
+
+.add-video{
+    min-width: max(105px,9vw);
+    background-color: white;
+    color: black;
+    position: absolute;
+    display: flex;
+    bottom: 0px;
+    right: 100px;
+    z-index: 9;
+    gap: 5px;
+    height: 30px;
+    align-items: center;
+    font-size: 17px;
+    padding: 0 5px;
+    border-radius: 10px;
+}
+.add-video p{
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.695);
+}
+.add-video p:nth-child(2){
+    color: rgba(0, 0, 0, 0.295);
 }

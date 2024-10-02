@@ -19,9 +19,20 @@ const addSubscriber = asyncHandler(async(req,res)=>{
             channel:channelId,
             subscriber:userId
         })
-        console.log(existingSuubscriber)
+        
         if(existingSuubscriber){
-            throw new apiError(400,"Already Subscribed")
+             await Subscription.findOneAndDelete({
+                channel:channelId,
+                subscriber:userId
+            })
+            return res.status(200)
+            .json(
+                new apiResponse(
+                    200,
+                    {},
+                    "Unsubscribed Successfully"
+                )
+            )
         }
 
         const suscription=new Subscription({
@@ -44,29 +55,4 @@ const addSubscriber = asyncHandler(async(req,res)=>{
     }
 })
 
-const deleteSubscriber = asyncHandler(async(req,res)=>{
-    
-    const {userId,channelId}=req.body
-
-    if(!userId || !channelId){
-        throw new apiError(404,'Required user and channel Id')
-    }
-
-    try {
-        await Subscription.findOneAndDelete(
-            {
-                channel:channelId,
-                subscriber:userId
-            }
-        )
-        return res.status(200)
-        .json( new apiResponse(
-            200,
-            {},
-            'Unsubscribed Sucessfully'
-        ))
-    } catch (error) {
-        throw new apiError(404,'have not subcribed channel')
-    }
-})
-export {addSubscriber,deleteSubscriber}
+export {addSubscriber}

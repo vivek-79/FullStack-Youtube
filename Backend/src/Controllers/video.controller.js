@@ -25,12 +25,23 @@ const uploadVideo = asyncHandler(async(req,res)=>{
     }
 
     const video = await cloudnaryUpload(videoLocalfilePath)
+
+    const videoUrl =video.display_name
+
+    const hlsurl = cloudinary.url(`${videoUrl}.m3u8`,{
+        resource_type:'video',
+        type:'upload',
+        transformation:[
+            {streaming_profile:'hd'}
+        ]
+    });
+
     const thumbnail = await cloudnaryUpload(thumbnailLocalPath)
     const duration= video.duration
     const owner = req.user._id
     const upload =await Video.create({
         title,
-        videoFile:video.url,
+        videoFile:hlsurl,
         thumbnail:thumbnail.url,
         description,
         duration,
@@ -95,7 +106,6 @@ const changeThumbnail = asyncHandler(async(req,res)=>{
 
 const getVideos = asyncHandler(async(req,res)=>{
     try {
-        console.log(req.query)
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
 
