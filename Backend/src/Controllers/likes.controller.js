@@ -60,7 +60,6 @@ const likeCount = async(videoId,userId)=>{
 const likeShort = asyncHandler(async(req,res)=>{
 
     const {userId,shortId} =req.body
-
     if(!userId || !shortId){
         throw new apiError(404,'UserId or Short is missing')
     }

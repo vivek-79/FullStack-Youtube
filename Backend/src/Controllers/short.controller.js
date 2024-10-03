@@ -1,3 +1,4 @@
+import { Like } from "../Models/like.model.js";
 import { Short } from "../Models/short.model.js";
 import { apiError } from "../Utils/apiError.js";
 import { apiResponse } from "../Utils/apiResponse.js";
@@ -48,10 +49,10 @@ const uploadShort = asyncHandler(async (req, res) => {
 
 const getShorts = asyncHandler(async (req, res) => {
 
-
-    let short=[]
+    const { userId } = req.body
+    let short = []
     try {
-        short =await Short.aggregate([
+        short = await Short.aggregate([
             {
                 $lookup: {
                     from: 'users',
@@ -69,26 +70,43 @@ const getShorts = asyncHandler(async (req, res) => {
                 }
             },
             {
-                $project:{
-                    owner:{
-                        $first:'$owner'
+                $project: {
+                    owner: {
+                        $first: '$owner'
                     },
-                    title:1,
-                    short:1
+                    title: 1,
+                    short: 1
                 }
             },
         ]).exec();
+
+        let result = []
+        const checkLiked = async () => {
+
+            for (let item of short) {
+                let shortId = item._id.toString()
+
+                let isLiked = await Like.findOne({
+                    short: shortId,
+                    likedBy: userId
+                });
+
+                item.isLiked = !!isLiked
+                result.push(item)
+            }
+            return res.status(200)
+                .json(
+                    new apiResponse(200, result, 'Short fetched sucessfully')
+                )
+        }
+        checkLiked()
     } catch (error) {
-        throw new apiError(502,'Cant get shorts',error.message)
+        throw new apiError(502, 'Cant get shorts', error.message)
     }
-    return res.status(200)
-    .json(
-        new apiResponse(200,short,'Short fetched sucessfully')
-    )
 
 })
 
-export { 
+export {
     uploadShort,
     getShorts
 }

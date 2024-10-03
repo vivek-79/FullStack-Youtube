@@ -10,6 +10,6 @@ const shortRoute=Router()
 shortRoute.use(verifyLogin)
 
 shortRoute.route('/upload').post(upload.single('short'),uploadShort)
-shortRoute.route('/get-shorts').get(getShorts)
+shortRoute.route('/get-shorts').post(getShorts)
 
 export {shortRoute}
