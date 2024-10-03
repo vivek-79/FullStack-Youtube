@@ -11,7 +11,7 @@ function Short() {
     useEffect(()=>{
         axios.get(`/v1/short/get-shorts`)
             .then((res) => {
-                console.log(res.data.data)
+                console.log(res)
                 setData(res.data.data)
             })
             .catch((error) => {

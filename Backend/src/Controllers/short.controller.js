@@ -69,15 +69,17 @@ const getShorts = asyncHandler(async (req, res) => {
                 }
             },
             {
-                $addFields: {
+                $project:{
                     owner:{
                         $first:'$owner'
-                    }
+                    },
+                    title:1,
+                    short:1
                 }
-            }
+            },
         ]).exec();
     } catch (error) {
-        throw new apiError(502,'Cant get shorts')
+        throw new apiError(502,'Cant get shorts',error.message)
     }
     return res.status(200)
     .json(
@@ -85,6 +87,7 @@ const getShorts = asyncHandler(async (req, res) => {
     )
 
 })
+
 export { 
     uploadShort,
     getShorts

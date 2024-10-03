@@ -44,14 +44,16 @@
 .short-mute{
     position: absolute;
     top: -250px;
+    left: 10px;
     border: 1px solid;
     border-radius: 50%;
     font-size: 25px;
     padding: 5px 0;
     z-index: 999;
     width: 40px;
+    color: rgba(255, 255, 255, 0.208);
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.207);
+    background-color: rgba(255, 255, 255, 0.147);
 }
 .short-info{
     width: 100%;
@@ -114,4 +116,93 @@
 .short-avatar img{
     width: 100%;
     object-fit: cover;
+}
+
+.short-comment{
+    width: 100%;
+    height: 270px;
+    background-color: rgba(152, 166, 181, 0.499);
+    backdrop-filter: blur(20px);
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    overflow-y: auto;
+    margin-bottom: 38px;
+    z-index: 99;
+}
+.short-comment::-webkit-scrollbar{
+    display: none;
+}
+
+ #coment-form{
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.555);
+    position: absolute;
+    border-radius: 0 0 15px 15px;
+    overflow: hidden;
+    z-index: 99;
+}
+
+#coment-form input{
+    width: 82%;
+    height: 40px;
+    outline: none;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.39);
+    backdrop-filter: blur(25px);
+    font-size: 17px;
+    padding: 0 10px;
+    color: rgba(0, 0, 0, 0.71);
+}
+
+#coment-form button{
+    height: 40px;
+    border: none;
+    width: 20%;
+    background-color: rgba(115, 149, 177, 0.545);
+    backdrop-filter: blur(15px);
+}
+.short-comment img{
+    object-fit: cover;
+    object-position: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+.each-short-comment{
+    width: 96%;
+    min-height:20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 16px;
+    text-align: left;
+}
+.hide-comment{
+    color: rgba(0, 0, 0, 0.623);
+    position: absolute;
+    right: 2px;
+    top: 4px;
+    font-size: 22px;
+}
+.short-userName{
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.501);
+}
+
+.play-pause-area{
+    width: 80%;
+    height: 80%;
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
 }

@@ -12,12 +12,15 @@ const commentSchema = new Schema ({
         type:Schema.Types.ObjectId,
         ref:'Video'
     },
+    short:{
+        type:Schema.Types.ObjectId,
+        ref:'Short'
+    },
     user:{
         type:Schema.Types.ObjectId,
         ref:'User'
     }
 },{timestamps:true})
 
-commentSchema.plugin(mongooseAggregatePaginate)
 
 export const Comment = mongoose.model('Comment',commentSchema)
