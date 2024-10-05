@@ -1,0 +1,205 @@
+
+.channel{
+    width: 100%;
+    height: 90vh;
+    padding: 10px;
+    overflow: auto;
+}
+.channel::-webkit-scrollbar{
+    width: 3px;
+    background-color: white;
+    border-radius: 10px;
+}
+.channel::-webkit-scrollbar-thumb{
+    background-color: rgba(0, 0, 0, 0.503);
+}
+.channel-personal-info{
+    padding: 5px;
+    width: 100%;
+    height: max(370px,25vw);
+    margin-bottom: 10px;
+}
+
+.cover-image{
+    width: 95%;
+    height: max(15vw,110px);
+    margin: auto;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.cover-image img{
+    width: 100%;
+    height: 100%;
+    object-position: center;
+}
+.other-details{
+    width: 100%;
+    height: 50%;
+    margin: auto;
+    display: flex;
+    gap: 20px;
+}
+.other-details .avatar{
+    position: relative;
+    margin-top: 20px;
+    width: max(10vw,150px);
+    height: 86%;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.other-details .avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.other-details .stats-info{
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.stats-info p:nth-child(1){
+    font-size: max(25px,2vw);
+    text-align: left;
+    font-weight: 400;
+    color: white;
+}
+.stats-info p:nth-child(2){
+    font-size: max(13px,0.9vw);
+    text-align: left;
+    font-weight: 350;
+    color: white;
+}
+.other-channel-info{
+    background-color: rgba(89, 105, 113, 0.385);
+    border-radius: 15px;
+    margin-top: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.364);
+    backdrop-filter: blur(15px);
+    min-height: 120px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.other-channel-info P:nth-child(1){
+    text-align: center;
+}
+ #other-channel-info1, #other-channel-info2{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+#other-channel-info1, #other-channel-info2 p,#channel-info-p{
+    font-size: 20px;
+}
+.other-channel-info-internal{
+    line-height: 19px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.other-channel-info-internal p:nth-child(2){
+    font-size: 20px;
+}
+#channel-subs{
+    font-size: 22px;
+    margin-bottom: -8px;
+}
+.videos-shorts-bar{
+    background-color: rgba(0, 0, 0, 0.355);
+    margin-top: max(10px,3.7vw);
+    width: 100%;
+    height: max(30px,1.5vw);
+    border: 1px solid rgba(255, 255, 255, 0.263);
+    overflow: hidden;
+    display: flex;
+    border-radius: 10px;
+    justify-content: space-around;
+}
+.videos-shorts-bar p{
+    width: 50%;
+    color: white;
+}
+.channel-content{
+    margin-top: 5px;
+    width: 100%;
+    overflow: auto;
+}
+.channel-content-videos{
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+}
+
+.short-navLink{
+    width: 50%;
+    text-decoration: none;
+    border-radius:10px ;
+    display: flex;
+    justify-content: center;
+    transition: 0.3s linear;
+}
+
+@media (max-width:900px){
+    .other-details .avatar{
+        position: relative;
+        margin-top: 55px;
+        width: max(10vw,130px);
+        height: 70%;
+    }
+    .other-details{
+        width: 100%;
+        height: 50%;
+    }
+    .cover-image{
+        flex-grow: 1;
+        height:max(18vw,150px);
+        background-color: white;
+    }
+}
+
+#short-disp{
+    width:max(22vw,240px);
+    height: 400px;
+}
+@media(max-width:775px){
+    #short-disp{
+        width:max(46vw,240px);
+        margin:auto;
+        height: 400px;
+    }
+}
+@media (max-width:600px){
+    .other-details .avatar{
+        margin-top: 70px;
+        width: max(7vw,100px);
+        height: 55%;
+    }
+    #short-disp{
+        width: 60%;
+        height: 400px;
+    }
+}
+
+#short-mute{
+    position: absolute;
+    top: -170px;
+    left: 10px;
+    border: 1px solid;
+    border-radius: 50%;
+    font-size: 25px;
+    padding: 5px 0;
+    z-index: 999;
+    width: 40px;
+    color: rgba(255, 255, 255, 0.208);
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.147);
+}

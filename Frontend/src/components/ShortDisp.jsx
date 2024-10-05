@@ -1,12 +1,8 @@
-
-
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Hls from 'hls.js'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-
-function ShortComp({ data }) {
-
+function ShortDisp({data}) {
     const videoRef = useRef(null)
     const userId = useSelector((state) => state.authState.userData?.data?.user._id)
     const [liked, setLiked] = useState(data.isLiked)
@@ -34,35 +30,11 @@ function ShortComp({ data }) {
                 video.src = data.short;
             }
         }
-        //auto-play
-        const obserOptions = {
-            root: null,
-            threshold: 0.6,
-        };
 
-        const observeCallback = (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    video.play()
-                    setPlaying(true)
-                }
-                else {
-                    video.pause()
-                }
-            })
-        };
 
-        const observe = new IntersectionObserver(observeCallback, obserOptions)
-
-        if (video) {
-            observe.observe(video)
-        }
         return () => {
             if (hls) {
                 hls.destroy()
-            }
-            if (video) {
-                observe.unobserve(video)
             }
         }
     }, [data.short])
@@ -173,10 +145,9 @@ function ShortComp({ data }) {
             window.open(shareUrl,'_blank')
         }
     };
-
-    return (
-        <div className="short-content">
-            <div className="short-video-content">
+  return (
+    <div id='short-disp' className='short-content'>
+        <div className="short-video-content">
                 <div onClick={handlePlay} className="play-pause-area"></div>
                 <video ref={videoRef}></video>
             </div>
@@ -188,7 +159,6 @@ function ShortComp({ data }) {
                     <div className="user-name">
                         <p>{data?.owner?.userName}</p>
                     </div>
-                    <button>Subscribe</button>
                 </div>
                 <div className="short-title">
                     <p>{data?.title}</p>
@@ -237,7 +207,7 @@ function ShortComp({ data }) {
                 <i onClick={copyVisible} className="ri-share-forward-line"></i>
                 <i className="ri-list-check cont-list"></i>
                 {playing ? '' : <i className="ri-play-fill" id='short-btn'></i>}
-                {<i className={mute ? " ri-volume-mute-line short-mute" : "ri-volume-up-line short-mute"} onClick={handleMute}></i>}
+                {<i id='short-mute' className={mute ? " ri-volume-mute-line" : "ri-volume-up-line"} onClick={handleMute}></i>}
 
             </div>
             {showComment &&
@@ -249,8 +219,8 @@ function ShortComp({ data }) {
                     <button onClick={handleSubmit}>ADD</button>
                 </div>
             }
-        </div>
-    )
+    </div>
+  )
 }
 
-export default ShortComp
+export default ShortDisp

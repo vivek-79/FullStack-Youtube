@@ -49,15 +49,23 @@ function Video() {
                 })
             
         }
+    axios.post('/v1/videos/getrecomendations',{videoId})
+    .then(res => {
+      const result=res.data.data.video;
+        setData(result)
+    })
+    .catch(err => {
+      console.error(err.message);
+    });
 
     }, [userId, channelName])
 
     //subscribe logic
-
+    const ownerId=chanelInfo._id
     const subscribe = () => {
         setSubBtn((prev) => !prev)
         subBtn ? setLSubscribeCount((prev) => prev - 1) : setLSubscribeCount((prev) => prev + 1)
-        axios.post('/v1/subscription/addSubscribe', { userId: userId, channelId: channelId })
+        axios.post('/v1/subscription/addSubscribe', {  userId, channelId ,ownerId})
             .then((res) => {
                 console.log(res)
             })
@@ -71,7 +79,7 @@ function Video() {
     const like = () => {
         setLiked((prev) => !prev)
         liked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1)
-        axios.post('/v1/likes/add-like', { videoId: videoId, userId: userId })
+        axios.post('/v1/likes/add-like', { videoId, userId ,ownerId})
             .then((res) => {
                 console.log(res)
             })

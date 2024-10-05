@@ -24,7 +24,7 @@ function Card(
         </div>
         <div className="card-lower">
             <div className="card-avatar">
-              <img src={avatar} alt="" />
+              <img className='thumbnail' src={avatar} alt="" />
             </div>
             <p className='card-title'>{title}</p>
             <p className='card-channel'>{owner}</p>

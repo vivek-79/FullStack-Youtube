@@ -14,7 +14,7 @@
     display: none;
 }
 .main{
-    width: calc(100%);
+    width: 100%;
     margin-left: 5px;
     margin-top: 10px;
 }
@@ -27,4 +27,29 @@
     flex-grow: 1;
     padding-left: 10px;
     overflow-y: auto;
+}
+@media(max-width:532px){
+    .card{
+        width: 96%;
+        height:360px;
+        min-height:300px;
+        margin-bottom: 10px;
+    }
+    .card-title{
+        overflow: hidden;
+    }
+    .card-upper{
+        height:260px;
+        width: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .card-upper img{
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        object-position:center;
+        border-radius: 0 15px 15px 15px;
+    }
+    
 }

@@ -72,14 +72,14 @@ function Videoplayer({ data }) {
         if (video) {
             video.addEventListener('timeupdate', handleSeek)
         }
-        if(data && video){
+        if(data){
             if(Hls.isSupported()){
                 const hls = new Hls({
                     fragLoadingTimeOut: 20000,  // Increase fragment loading timeout to 20 second     // Retry loading a fragment 6 times
                     fragLoadingRetryDelay: 2000, // 2 seconds delay between retries
                 })
                 hls.loadSource(data)
-                hls.attachMedia(videoRef.current)
+                hls.attachMedia(videoRef?.current)
 
                 hls.on(Hls.Events.MANIFEST_PARSED,()=>{
                    
@@ -162,6 +162,8 @@ function Videoplayer({ data }) {
         hlsInstance.currentLevel=value
     }
 
+    // fetchh-recomended videos
+    
     return (
         <div className={fullScreen?'video fullScreen':"video" }>
             <video id='my-video' ref={videoRef}></video>

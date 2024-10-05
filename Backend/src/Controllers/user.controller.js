@@ -7,6 +7,10 @@ import { cloudnaryUpload } from "../Utils/cloudinary.js";
 import { Comment } from "../Models/comment.model.js";
 import jwt from 'jsonwebtoken'
 import mongoose from "mongoose";
+import { Like } from "../Models/like.model.js";
+import { Subscription } from "../Models/subscription.model.js";
+import { Video } from "../Models/video.model.js";
+import { Short } from "../Models/short.model.js";
 
 
 const registerUser = asyncHandler(async(req,res)=>{
@@ -334,11 +338,78 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
         'WatchHistory Fetched Successfully'
     ))
 })
+
+const getChannelAnalysis = asyncHandler(async(req,res)=>{
+
+    const {userId} =req.body
+    
+    if(!userId){
+        throw new apiError(400,'user not found')
+    }
+    try {
+        const totalLike=await Like.countDocuments({
+            owner:userId
+        })
+        const totalSubscribers=await Subscription.countDocuments({
+            channel:userId
+        })
+        const totalVideos=await Video.aggregate([
+            {
+                $match:{
+                    owner:new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $group:{
+                    _id:null,
+                    totalVideo:{$sum:1},
+                    videos:{$push:'$$ROOT'}
+                }
+            },
+            {
+                $project:{
+                    _id:0,
+                    videos:1,
+                    totalVideo:1
+                }
+            }
+        ])
+        const totalShorts=await Short.aggregate([
+            {
+                $match:{
+                    owner:new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $group:{
+                    _id:null,
+                    totalShort:{$sum:1},
+                    short:{$push:'$$ROOT'}
+                }
+            },
+            {
+                $project:{
+                    _id:0,
+                    totalShort:1,
+                    short:1
+                }
+            }
+        ])
+
+        return res.status(200)
+        .json(
+            new apiResponse(201,{totalLike,totalSubscribers,totalVideos,totalShorts},'Information fetched successfully')
+        )
+    } catch (error) {
+        throw new apiError(500,'Cant get information')
+    }
+})
 export {
     registerUser,
     loginUser,
     logoutUser,
     refreshaccessToken,
     getChannelDetail,
-    getWatchHistory
+    getWatchHistory,
+    getChannelAnalysis
 }

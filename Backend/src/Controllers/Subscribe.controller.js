@@ -37,7 +37,7 @@ const addSubscriber = asyncHandler(async(req,res)=>{
 
         const suscription=new Subscription({
             channel:channelId,
-            subscriber:userId
+            subscriber:userId,
         })
         await suscription.save();
 

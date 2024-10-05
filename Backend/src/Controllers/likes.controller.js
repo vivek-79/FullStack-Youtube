@@ -7,15 +7,16 @@ import { Like } from '../Models/like.model.js'
 
 const addLikes = asyncHandler(async(req,res)=>{
 
-    const {videoId,userId} =req.body
+    const {videoId,userId,ownerId} =req.body
 
-    if(!videoId || !userId){
+    console.log(ownerId)
+    if(!videoId || !userId || !ownerId){
         throw new apiError(404,'No user or video found')
     }
 
     const isLiked=await Like.findOne({
         video:videoId,
-        likedBy:userId
+        likedBy:userId,
     })
 
     if(isLiked){
@@ -28,7 +29,8 @@ const addLikes = asyncHandler(async(req,res)=>{
     }
     const newLike = await new Like({
         video:videoId,
-        likedBy:userId
+        likedBy:userId,
+        owner:ownerId
     })
     await newLike.save()
     if(!newLike){
@@ -59,8 +61,8 @@ const likeCount = async(videoId,userId)=>{
 }
 const likeShort = asyncHandler(async(req,res)=>{
 
-    const {userId,shortId} =req.body
-    if(!userId || !shortId){
+    const {userId,shortId,ownerId} =req.body
+    if(!userId || !shortId || !ownerId){
         throw new apiError(404,'UserId or Short is missing')
     }
 
@@ -81,7 +83,8 @@ const likeShort = asyncHandler(async(req,res)=>{
     }
     const like = new Like({
         likedBy:userId,
-        short:shortId
+        short:shortId,
+        owner:ownerId
     })
     if(!like){
         throw new apiError(500,'Cant add like')

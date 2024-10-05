@@ -12,10 +12,10 @@ const uploadVideo = asyncHandler(async(req,res)=>{
     const videoLocalfilePath = req.files?.videoFile[0]?.path
     const thumbnailLocalPath = req.files?.thumbnail[0]?.path
 
-    const {title,description,isPublished} = req.body
-    
+    const {title,description,isPublished,tags} = req.body
+    console.log(req.body)
     if([title,description,isPublished].some((field)=>{
-        field?.trim() ===''
+        typeof field ==='string' && field?.trim() ===''
     })){
         throw new apiError(401,'All fielsds are required')
     }
@@ -46,6 +46,7 @@ const uploadVideo = asyncHandler(async(req,res)=>{
         description,
         duration,
         isPublished,
+        tags,
         owner: new mongoose.Types.ObjectId(owner)
     })
     const uploadedVideo = await Video.findById(upload._id).populate({
@@ -232,10 +233,16 @@ const getVideoDetail=asyncHandler(async(req,res,next)=>{
     )
 })
 
+const getRecomendations =asyncHandler(async(req,res)=>{
+
+    const {videoId} = req.body
+    console.log(videoId)
+})
 
 export {
     uploadVideo,
     changeThumbnail,
     getVideos,
-    getVideoDetail
+    getVideoDetail,
+    getRecomendations
 }

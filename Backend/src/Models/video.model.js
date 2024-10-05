@@ -33,6 +33,9 @@ const videoSchema = new Schema({
     isPublished:{
         type:Boolean,
         default:false
+    },
+    tags:{
+        type:String
     }
 
 },{timestamps:true})

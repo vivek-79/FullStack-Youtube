@@ -1,10 +1,11 @@
 
 .card{
     width: max(23vw,250px);
-    height: max(270px,16vw);
+    height: max(270px,19vw);
     padding: 0%;
     border-radius: 15px;
     display: flex;
+    flex-grow: 0.3;
     flex-direction: column;
     flex-wrap: wrap;
 }
@@ -22,18 +23,17 @@
 .card-upper img{
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
     object-position: center;
     border-radius: 0 15px 15px 15px;
 }
 .card-lower{
-    height: 22%;
+    height: 25%;
     width: 100%;
     display: flex;
     flex-direction: column;
     padding:2px 5px 0 1px;
     flex-wrap: nowrap;
-    text-overflow: ellipsis;
     white-space:nowrap;
     overflow: hidden;
     position: relative;
@@ -54,7 +54,7 @@
     object-position: center;
 }
 .card-title{
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
     text-align: left;
     position: relative;
@@ -70,11 +70,4 @@
 .card-info{
     font-size: 13px;
     line-height: 15px;
-}
-
-@media (max-width:530px){
-    .card{
-        width: 80%;
-        margin: auto;
-    }
 }

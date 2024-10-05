@@ -17,6 +17,7 @@ function Upload() {
         formData.append('title',data.title)
         formData.append('description',data.description)
         formData.append('isPublished',data.isPublished)
+        formData.append('tags',data.tags)
 
         for (let pair of formData.entries()) {
             console.log(`${pair[0]}: ${pair[1]}`);
@@ -74,6 +75,14 @@ function Upload() {
                     id="description" placeholder='Enter description'
                     required
                     {...register('description')}
+                    ></textarea>
+                </div>
+                <div className="form-input">
+                    <label htmlFor="tags">Tags</label>
+                    <textarea name="description" 
+                    id="tags" placeholder='#tags ...'
+                    required
+                    {...register('tags')}
                     ></textarea>
                 </div>
 
