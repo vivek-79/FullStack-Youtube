@@ -3,9 +3,10 @@ import Hls from 'hls.js'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 function ShortDisp({data}) {
+    console.log(data)
     const videoRef = useRef(null)
     const userId = useSelector((state) => state.authState.userData?.data?.user._id)
-    const [liked, setLiked] = useState(data.isLiked)
+    const [liked, setLiked] = useState(false)
     const [showComment, setShowComment] = useState(false)
     const [comment, setComment] = useState('')
     const [allComment, setAllComment] = useState()
@@ -13,6 +14,7 @@ function ShortDisp({data}) {
     const shortId = data?._id
     const ownerId=data?.owner._id
     useEffect(() => {
+        setLiked(data?.isLiked)
         const video = videoRef.current
         let hls
         if (data.short) {

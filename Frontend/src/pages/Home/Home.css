@@ -28,6 +28,14 @@
     padding-left: 10px;
     overflow-y: auto;
 }
+.home-content::-webkit-scrollbar{
+    width: 3px;
+    background-color: black;
+}
+.home-content::-webkit-scrollbar-thumb{
+    background-color: rgba(255, 255, 255, 0.34);
+    border-radius: 15px;
+}
 @media(max-width:532px){
     .card{
         width: 96%;

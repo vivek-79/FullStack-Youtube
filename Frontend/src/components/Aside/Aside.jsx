@@ -25,8 +25,6 @@ function Aside() {
             'Your channel',
             'History',
             'Playlists',
-            'Your videos',
-            'Your courses',
             'Watch later',
         ]
     const subscription=[

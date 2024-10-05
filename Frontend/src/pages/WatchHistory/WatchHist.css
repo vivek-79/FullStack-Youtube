@@ -1,0 +1,64 @@
+
+.watch-hist{
+    width: 100%;
+    height: 91.9vh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    gap: 10px;
+}
+.watch-hist-video{
+    position: relative;
+    width: 100%;
+    min-height: 42.5%;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.watch-hist-video2{
+    position: relative;
+    width: 100%;
+    height: 62%;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.watch-hist-video2::-webkit-scrollbar{
+    display: none;
+}
+.watch-his-head{
+    text-align: left;
+    position: fixed;
+    padding:0 15px;
+    height: 3%;
+    border-radius: 10px;
+    z-index: 9999;
+    backdrop-filter: blur(15px);
+    width: 98%;
+    background-color: rgba(54, 45, 45, 0.756);
+}
+
+.hist-single-elem{
+    overflow: hidden;
+    min-width: 250px;
+    height: 92%;
+    margin-top: 10px;
+    align-self: self-end;
+}
+.hist-single-elem2{
+    min-width: 250px;
+    overflow: hidden;
+    border: 1;
+    height: 100%;
+    align-self: self-end;
+}
+.hist-single-elem2 #short-disp{
+    width: 100%;
+    height: 100%;
+    margin-top: 5px;
+}
+.watch-hist-video::-webkit-scrollbar{
+    display: none;
+}

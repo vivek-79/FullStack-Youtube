@@ -15,7 +15,7 @@ function ShortComp({ data }) {
     const [allComment, setAllComment] = useState()
     const [shareOption, setShareOption] = useState(false)
     const shortId = data?._id
-    const ownerId=data?.owner._id
+    const ownerId = data?.owner._id
     useEffect(() => {
         const video = videoRef.current
         let hls
@@ -45,6 +45,13 @@ function ShortComp({ data }) {
                 if (entry.isIntersecting) {
                     video.play()
                     setPlaying(true)
+                    axios.post('/v1/users/add-history', { userId, shortId })
+                        .then((res) => {
+                            console.log(res)
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
                 }
                 else {
                     video.pause()
@@ -93,7 +100,7 @@ function ShortComp({ data }) {
     //like logic
     const like = ({ userId, shortId }) => {
         setLiked((prev) => !prev)
-        axios.post('/v1/likes/add-like/like-short', { shortId, userId ,ownerId})
+        axios.post('/v1/likes/add-like/like-short', { shortId, userId, ownerId })
             .then((res) => {
                 console.log(res)
             })
@@ -142,11 +149,11 @@ function ShortComp({ data }) {
 
     //share-logic
 
-    const handleShare=(platform)=>{
+    const handleShare = (platform) => {
         const url = encodeURIComponent(window.location.href)
         const text = encodeURIComponent('Check out this amazing crix')
 
-        let shareUrl ='';
+        let shareUrl = '';
 
         switch (platform) {
             case 'facebook':
@@ -159,18 +166,18 @@ function ShortComp({ data }) {
                 shareUrl = `https://wa.me/?text=${text}%20${url}`
                 break;
             case 'copy':
-                shareUrl= url
+                shareUrl = url
                 break;
             default:
                 return;
         }
-        if(platform==='copy'){
+        if (platform === 'copy') {
             navigator.clipboard.writeText(shareUrl)
-            .then(()=>alert('Link copied to clipboard'))
-            .catch((err)=>console.log(err))
+                .then(() => alert('Link copied to clipboard'))
+                .catch((err) => console.log(err))
         }
         else {
-            window.open(shareUrl,'_blank')
+            window.open(shareUrl, '_blank')
         }
     };
 
@@ -199,19 +206,19 @@ function ShortComp({ data }) {
 
             {shareOption &&
                 <div className="short-share">
-                    <div onClick={()=>handleShare('whatsapp')} className="share-each-option">
+                    <div onClick={() => handleShare('whatsapp')} className="share-each-option">
                         <img src='\assets\whatsapp_PNG21.png' alt="" />
                         <p>Whatsapp</p>
                     </div>
-                    <div onClick={()=>handleShare('facebook')} className="share-each-option">
+                    <div onClick={() => handleShare('facebook')} className="share-each-option">
                         <img src='\assets\facebook.png' alt="" />
                         <p>Facebook</p>
                     </div>
-                    <div onClick={()=>handleShare('linkdin')} className="share-each-option">
+                    <div onClick={() => handleShare('linkdin')} className="share-each-option">
                         <img src='\assets\linkdin.png' alt="" />
                         <p>Linkdin</p>
                     </div>
-                    <div onClick={()=>handleShare('copy')} className="share-each-option">
+                    <div onClick={() => handleShare('copy')} className="share-each-option">
                         <img src='\assets\copy-url.png' alt="" />
                         <p>Copyurl</p>
                     </div>

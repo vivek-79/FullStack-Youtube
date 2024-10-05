@@ -7,6 +7,7 @@ import Upload from './Upload/Upload.jsx'
 import Short from './Short/Short.jsx'
 import UploadShort from './UploadShort/UploadShort.jsx'
 import Channel from './Channel/Channel.jsx'
+import WatchHist from './WatchHistory/WatchHist.jsx'
 
 export {
     Register,
@@ -17,4 +18,5 @@ export {
     Short,
     UploadShort,
     Channel,
+    WatchHist
 }

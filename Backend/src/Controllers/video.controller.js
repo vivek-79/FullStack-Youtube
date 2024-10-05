@@ -236,7 +236,81 @@ const getVideoDetail=asyncHandler(async(req,res,next)=>{
 const getRecomendations =asyncHandler(async(req,res)=>{
 
     const {videoId} = req.body
-    console.log(videoId)
+    if(!videoId){
+        throw new apiError(400,"No videoId found")
+    }
+    const video = await Video.findById(videoId)
+    if(!video){
+        throw new apiError(500,'No video found')
+    }
+    const videoTags= video.tags?.split(",").map((tags)=>tags.trim().toLowerCase())
+
+    try {
+        const recomendedVideos =await  Video.aggregate([
+            {
+                $match:{
+                    _id:{$ne:video._id},
+                    tags:{$exists:true,$ne:""}
+                }
+            },
+            {
+                $project:{
+                    thumbnail:1,
+                    owner:1,
+                    title:1,
+                    matchCount:{
+                        $size:{ 
+                            $setIntersection:[
+                                videoTags,
+                                {
+                                    $map:{
+                                        input:{$split:[{$toLower:"$tags"},","]},
+                                        as:'tag',
+                                        in:{$trim:{input:"$$tag"}}
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                $match:{
+                    matchCount:{$gt:0}
+                }
+            },
+            {
+                $sort:{
+                    matchCount:-1
+                }
+            },
+            {
+                $limit:10,
+            },
+            {
+                $lookup:{
+                    from:'users',
+                    localField:'owner',
+                    foreignField:'_id',
+                    as:'owner',
+                    pipeline:[
+                        {
+                            $project:{
+                                userName:1,
+                                avatar:1
+                            }
+                        }
+                    ]
+                }
+            }
+        ]).exec()
+        return res.status(200)
+        .json(
+            new apiResponse(200,recomendedVideos,"Found recomendations")
+        )
+    } catch (error) {
+        throw new apiError(500,'Cant get recomendations')
+    }
 })
 
 export {

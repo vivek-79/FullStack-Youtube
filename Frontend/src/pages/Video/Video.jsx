@@ -16,7 +16,8 @@ function Video() {
     const userInfo = useSelector((state) => state.authState.userData)
     const userId = userInfo?.data?.user?._id
     const channelName = data?.owner?.userName
-    const [more,setMore] =useState(false)
+    const [more, setMore] = useState(false)
+    const [recomended, setRecomended] = useState('')
     useEffect(() => {
         axios.get(`/v1/videos/getvideo-detail/${videoId}`)
             .then((res) => {
@@ -33,7 +34,7 @@ function Video() {
     const [liked, setLiked] = useState(false)
     const [likeCount, setLikeCount] = useState('')
     const [subscribeCount, setLSubscribeCount] = useState('')
-    const comments=chanelInfo?.comments
+    const comments = chanelInfo?.comments
     useEffect(() => {
         if (userId && channelName) {
             axios.post('/v1/users/c', { userName: channelName, userId: userId, videoId: videoId })
@@ -47,25 +48,35 @@ function Video() {
                 .catch((error) => {
                     console.log(error)
                 })
-            
-        }
-    axios.post('/v1/videos/getrecomendations',{videoId})
-    .then(res => {
-      const result=res.data.data.video;
-        setData(result)
-    })
-    .catch(err => {
-      console.error(err.message);
-    });
 
-    }, [userId, channelName])
+        }
+
+        //get-recomendation
+        axios.post('/v1/videos/getrecomendations', { videoId })
+            .then(res => {
+                setRecomended(res?.data?.data)
+                console.log(res)
+            })
+            .catch(err => {
+                console.error(err.message);
+            });
+
+        //add-to-watchHistory
+        axios.post('/v1/users/add-history',{userId,videoId})
+        .then((res)=>{
+            console.log(res)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }, [userId, channelName,videoId])
 
     //subscribe logic
-    const ownerId=chanelInfo._id
+    const ownerId = chanelInfo._id
     const subscribe = () => {
         setSubBtn((prev) => !prev)
         subBtn ? setLSubscribeCount((prev) => prev - 1) : setLSubscribeCount((prev) => prev + 1)
-        axios.post('/v1/subscription/addSubscribe', {  userId, channelId ,ownerId})
+        axios.post('/v1/subscription/addSubscribe', { userId, channelId, ownerId })
             .then((res) => {
                 console.log(res)
             })
@@ -79,7 +90,7 @@ function Video() {
     const like = () => {
         setLiked((prev) => !prev)
         liked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1)
-        axios.post('/v1/likes/add-like', { videoId, userId ,ownerId})
+        axios.post('/v1/likes/add-like', { videoId, userId, ownerId })
             .then((res) => {
                 console.log(res)
             })
@@ -87,26 +98,26 @@ function Video() {
                 console.log(error)
             })
     }
-    
+
     //comment
-    const [comment,setComment]=useState('')
-    const handleChange=(e)=>{
+    const [comment, setComment] = useState('')
+    const handleChange = (e) => {
         setComment(e.target.value)
     }
-    const submit =()=>{
-        axios.post ('/v1/comment/add-comment',{content:comment,userId:userId,videoId:videoId})
-        .then((res)=>{
-            setComment('')
-            console.log(res)
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
+    const submit = () => {
+        axios.post('/v1/comment/add-comment', { content: comment, userId: userId, videoId: videoId })
+            .then((res) => {
+                setComment('')
+                console.log(res)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
-    const handleDescription =()=>{
+    const handleDescription = () => {
 
-        setMore((prev)=>!prev)
+        setMore((prev) => !prev)
     }
     
     return (
@@ -157,27 +168,43 @@ function Video() {
                         <div className='desc-message'>
                             <p>{data?.description}</p>
                         </div>
-                        <div className= {more ?'less':'more'}>
-                            <p onClick={handleDescription}>{more ? 'less ^':'more...'}</p>
+                        <div className={more ? 'less' : 'more'}>
+                            <p onClick={handleDescription}>{more ? 'less ^' : 'more...'}</p>
                         </div>
                     </div>
                     <div className="comment-para">
                         <div className="all-comment">
-                            {comments && comments.map((val)=>(
+                            {comments && comments.map((val) => (
                                 <div className='each-comment' key={val._id}>
                                     <p>{val.content}</p>
                                 </div>
                             ))}
                         </div>
                     </div>
+                    <div className="comment-inpt-small" >
+                        <input type="text" required value={comment} onChange={handleChange} placeholder='Add Your Comment ...' />
+                        <button type='submit' onClick={submit}>Add</button>
+                    </div>
                 </div>
             </div>
-            <div className="comment-inpt" id='comment-inpt'>
-                <input type="text" required value={comment} onChange={handleChange} placeholder='Add Your Comment ...'/>
-                    <button type='submit' onClick={submit}>Add</button>
-                </div>
+            
             <div className="video-side">
-                <SideCard />
+                {recomended && recomended.map((item) => (
+                    <SideCard  data={item} />
+
+                ))}
+                {recomended && recomended.map((item) => (
+                    <SideCard data={item} />
+
+                ))}
+                {recomended && recomended.map((item) => (
+                    <SideCard data={item} />
+
+                ))}
+                {recomended && recomended.map((item) => (
+                    <SideCard data={item}/>
+
+                ))}
             </div>
         </div>
     )

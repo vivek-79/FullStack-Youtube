@@ -287,56 +287,143 @@ const getChannelDetail = asyncHandler(async(req,res)=>{
     )
 })
 
-const getWatchHistory = asyncHandler(async(req,res)=>{
+const addHistory = asyncHandler(async(req,res)=>{
+    const {userId,videoId,shortId} = req.body
 
-    const user = await User.aggregate([
-        {
-            $match:{
-                _id:new mongoose.Types.ObjectId(req.user._id)
+    if(!userId){
+        throw new apiError(400,'User not found')
+    }
+    if(!videoId && !shortId){
+        throw new apiError(400,'Nothing to add in history')
+    }
+    try {
+        const user =await User.findById(userId)
+        console.log('yaha',user)
+        if(!user){
+            throw new apiError(404,'No user found')
+        }
+
+        if(videoId){
+            const videoObjectId=new mongoose.Types.ObjectId(videoId)
+            if(!user.watchHistoryVideo.includes( videoObjectId)){
+                user.watchHistoryVideo.push( videoObjectId)
             }
-        },
-        {
-            $lookup:{
-                from:"videos",
-                localField:'watchHistory',
-                foreignField:'_id',
-                as:'watchHistory',
-                pipeline:[
-                    {
-                       $lookup:{
-                        from:'users',
-                        localField:'owner',
-                        foreignField:'_id',
-                        as:'owner',
-                        pipeline:[
-                            {
-                               $project:{
-                                userName:1,
-                                fullName:1,
-                                avatar:1
-                               } 
-                            }
-                        ]
-                       } 
-                    },
-                    {
-                        $addFields:{
-                            owner:{
-                                $first:"$owner"
-                            }
-                        }
-                    }
-                ]
+            else{
+                throw new apiError(400,'Video already in watchHistory')
             }
         }
-    ])
+        if(shortId){
+            const shortObjectId= new mongoose.Types.ObjectId(shortId)
+            if(!user.watchHistoryShort.includes(shortObjectId)){
+                 user.watchHistoryShort.push(shortObjectId)
+            }
+            else{
+                throw new apiError(400,'Short already in watchHistory')
+            }
+        }
+        await user.save()
+        return res.status(200)
+        .json(new apiResponse(200,{},'Watch history updated'))
+    } 
+    catch (error) {
+        console.log(error.message)
+    }
+})
+const getWatchHistory = asyncHandler(async(req,res)=>{
 
-    return res.status(200)
-    .json(new apiResponse(
-        200,
-        user[0].watchHistory,
-        'WatchHistory Fetched Successfully'
-    ))
+    const {userId} =req.body
+    try {
+        const user = await User.aggregate([
+            {
+                $match:{
+                    _id:new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup:{
+                    from:"videos",
+                    localField:'watchHistoryVideo',
+                    foreignField:'_id',
+                    as:'watchHistoryVideo',
+                    pipeline:[
+                        {
+                           $lookup:{
+                            from:'users',
+                            localField:'owner',
+                            foreignField:'_id',
+                            as:'owner',
+                            pipeline:[
+                                {
+                                   $project:{
+                                    userName:1,
+                                    fullName:1,
+                                    avatar:1
+                                   } 
+                                }
+                            ]
+                           } 
+                        },
+                        {
+                            $addFields:{
+                                owner:{
+                                    $first:"$owner"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $lookup:{
+                    from:'shorts',
+                    localField:'watchHistoryShort',
+                    foreignField:'_id',
+                    as:'watchHistoryShort',
+                    pipeline:[
+                        {
+                            $lookup:{
+                                from:'users',
+                                localField:'owner',
+                                foreignField:'_id',
+                                as:'owner',
+                                pipeline:[
+                                    {
+                                        $project:{
+                                            avatar:1,
+                                            userName:1,
+                                        }
+                                    }
+                                ]
+                            }
+                            
+                        },
+                        {
+                            $addFields:{
+                                owner:{
+                                    $first:'$owner'
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project:{
+                    watchHistoryVideo:1,
+                    watchHistoryShort:1
+                }
+            }
+        ])
+        return res.status(200)
+        .json(new apiResponse(
+            200,
+            user[0],
+            'WatchHistory Fetched Successfully'
+        ))
+    } catch (error) {
+        console.log(error.message)
+    }
+
 })
 
 const getChannelAnalysis = asyncHandler(async(req,res)=>{
@@ -411,5 +498,6 @@ export {
     refreshaccessToken,
     getChannelDetail,
     getWatchHistory,
-    getChannelAnalysis
+    getChannelAnalysis,
+    addHistory
 }

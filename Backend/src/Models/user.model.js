@@ -32,7 +32,19 @@ const userSchema = new Schema({
     coverImage:{
         type:String,//cloudanary
     },
-    watchHistory:[
+    watchHistoryVideo:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:"Video"
+        }
+    ],
+    watchHistoryShort:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:"Short"
+        }
+    ],
+    watchLater:[
         {
             type:Schema.Types.ObjectId,
             ref:"Video"

@@ -6,7 +6,7 @@ import Layout from './Layout.jsx'
 import {createBrowserRouter,createRoutesFromElements,RouterProvider,Route} from 'react-router-dom'
 import {Provider} from  'react-redux'
 import store from './Store/Store.js'
-import { Home, Login, Register ,Video,Upload, Short,UploadShort,Channel} from './pages/index.js'
+import { Home, Login, Register ,Video,Upload, Short,UploadShort,Channel,WatchHist} from './pages/index.js'
 
 
 const router = createBrowserRouter(
@@ -19,8 +19,8 @@ const router = createBrowserRouter(
       <Route path='/upload-video' element={<Upload/>}/>
       <Route path='/upload-short' element={<UploadShort/>}/>
       <Route path='/Shorts' element={<Short/>}/>
-      <Route path='/Your channel' element={<Channel/>}>
-      </Route>
+      <Route path='/Your channel' element={<Channel/>}/>
+      <Route path='/History' element={<WatchHist/>}/>
     </Route>
   )
 )
