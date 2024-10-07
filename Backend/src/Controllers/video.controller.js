@@ -313,10 +313,41 @@ const getRecomendations =asyncHandler(async(req,res)=>{
     }
 })
 
+const getSearch = asyncHandler(async(req,res)=>{
+    const {input} = req.body
+    console.log(input)
+    if(!input){
+        throw new apiError(400,"No input")
+    }
+    const formatedInput = input.toLowerCase()
+    try {
+        const result = await Video.aggregate([
+            {
+                $match:{
+                    title:{
+                        $regex:formatedInput,
+                        $options:'i'
+                    }
+                }
+            },
+            {
+                $project:{
+                    title:1
+                }
+            }
+        ])
+        return res.status(200)
+        .json( new apiResponse(200,result,"Fetched successfully"))
+    } catch (error) {
+        return res.status(500)
+        .json(new apiResponse(500,{},"Internal server error"))
+    }
+})
 export {
     uploadVideo,
     changeThumbnail,
     getVideos,
     getVideoDetail,
-    getRecomendations
+    getRecomendations,
+    getSearch
 }

@@ -19,19 +19,47 @@ const addComment = asyncHandler(async (req, res) => {
         if (!comment) {
             throw new apiError(500, 'Unable to add comment')
         }
-        comment.save()
+        await comment.save()
+        if (videoId) {
+            const comments = await Comment.aggregate([
+                {
+                    $match: {
+                        video: new mongoose.Types.ObjectId(videoId), // Match the specific short
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    userName: 1,
+                                    avatar: 1
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    $addFields: {
+                        user: {
+                            $first: '$user'
+                        }
+                    }
+                }
+            ])
+
+            return res.status(200)
+                .json(
+                    new apiResponse(200, comments, 'Comments fetched successfully')
+                )
+        }
     } catch (error) {
         throw new apiError(500, 'Cant add comment')
     }
-
-    return res.status(200)
-        .json(
-            new apiResponse(
-                200,
-                {},
-                "Comment added"
-            )
-        )
 })
 
 const shortComment = asyncHandler(async (req, res) => {
@@ -95,48 +123,88 @@ const shortComment = asyncHandler(async (req, res) => {
 })
 const getComments = asyncHandler(async (req, res) => {
 
-    const { shortId } = req.body
+    const { shortId, videoId } = req.body
     console.log(shortId)
-    if (!shortId) {
-        throw new apiError(400, 'No shortId found')
+    if (!shortId && !videoId) {
+        throw new apiError(400, 'No shortId or videoId found')
     }
     try {
-        const comments = await Comment.aggregate([
-            {
-                $match: {
-                    short: new mongoose.Types.ObjectId(shortId), // Match the specific short
-                }
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                    pipeline: [
-                        {
-                            $project: {
-                                userName: 1,
-                                avatar: 1
+        if (shortId) {
+            const comments = await Comment.aggregate([
+                {
+                    $match: {
+                        short: new mongoose.Types.ObjectId(video), // Match the specific short
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    userName: 1,
+                                    avatar: 1
+                                }
                             }
+                        ]
+                    }
+                },
+                {
+                    $addFields: {
+                        user: {
+                            $first: '$user'
                         }
-                    ]
-                }
-            },
-            {
-                $addFields: {
-                    user: {
-                        $first: '$user'
                     }
                 }
-            }
-        ])
+            ])
 
-        return res.status(200)
-            .json(
-                new apiResponse(200, comments, 'Comments fetched successfully')
-            )
+            return res.status(200)
+                .json(
+                    new apiResponse(200, comments, 'Comments fetched successfully')
+                )
 
+        }
+
+        if (videoId) {
+            const comments = await Comment.aggregate([
+                {
+                    $match: {
+                        video: new mongoose.Types.ObjectId(videoId), // Match the specific short
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'user',
+                        pipeline: [
+                            {
+                                $project: {
+                                    userName: 1,
+                                    avatar: 1
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    $addFields: {
+                        user: {
+                            $first: '$user'
+                        }
+                    }
+                }
+            ])
+
+            return res.status(200)
+                .json(
+                    new apiResponse(200, comments, 'Comments fetched successfully')
+                )
+        }
     } catch (error) {
         throw new apiError(500, 'Cant get comments')
     }

@@ -2,7 +2,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    status:true
+    status:false,
+    data:[]
 }
 
 const componentSlice=createSlice({
@@ -12,10 +13,13 @@ const componentSlice=createSlice({
     reducers:{
         toggl:(state,action)=>{
             state.status=!state.status
+        },
+        search:(state,action)=>{
+            state.data=action.payload
         }
     }
 })
 
-export const {toggl}=componentSlice.actions
+export const {toggl,search}=componentSlice.actions
 
 export default componentSlice.reducer

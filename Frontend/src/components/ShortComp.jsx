@@ -132,7 +132,7 @@ function ShortComp({ data }) {
     useEffect(() => {
 
         if (showComment) {
-            axios.post('/v1/comment/get-comment-short', { shortId: shortId })
+            axios.post('/v1/comment/get-comment', {shortId })
                 .then((res) => {
                     setAllComment(res.data.data)
                 })

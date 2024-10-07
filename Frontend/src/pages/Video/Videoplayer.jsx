@@ -5,8 +5,9 @@ import './Video.css'
 import Hls from 'hls.js'
 
 function Videoplayer({ data }) {
-    
+
     const videoRef = useRef(null)
+    const controlRef =useRef(null)
 
     const [isPlay, setIsPlay] = useState(false)
     const [totalTime, setTotaltime] = useState(`0:00`)
@@ -72,8 +73,8 @@ function Videoplayer({ data }) {
         if (video) {
             video.addEventListener('timeupdate', handleSeek)
         }
-        if(data){
-            if(Hls.isSupported()){
+        if (data) {
+            if (Hls.isSupported()) {
                 const hls = new Hls({
                     fragLoadingTimeOut: 20000,  // Increase fragment loading timeout to 20 second     // Retry loading a fragment 6 times
                     fragLoadingRetryDelay: 2000, // 2 seconds delay between retries
@@ -81,28 +82,28 @@ function Videoplayer({ data }) {
                 hls.loadSource(data)
                 hls.attachMedia(videoRef?.current)
 
-                hls.on(Hls.Events.MANIFEST_PARSED,()=>{
-                   
-                    const availableLevels = hls.levels.map((level)=>(
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+
+                    const availableLevels = hls.levels.map((level) => (
                         {
-                            height:level.height,
-                            index:level.level
+                            height: level.height,
+                            index: level.level
                         }
                     ))
                     setQualityLevels(availableLevels)
                     videoRef.current.play()
                 })
-                hls.on(Hls.Events.ERROR,(event,data)=>{
-                    console.log("Hls error",data)
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    console.log("Hls error", data)
                 })
                 setHlsInstance(hls)
             }
-            else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')){
+            else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
 
-            videoRef.current.src=data;
-        } 
+                videoRef.current.src = data;
+            }
         }
-        if(videoRef.current){
+        if (videoRef.current) {
             setIsPlay(true)
             videoRef.current.play()
         }
@@ -110,7 +111,7 @@ function Videoplayer({ data }) {
             if (video) {
                 video.removeEventListener('timeupdate', handleSeek)
             }
-            
+
         }
 
     }, [data])
@@ -126,48 +127,56 @@ function Videoplayer({ data }) {
     }
 
     //full screen
-    const [fullScreen,setFullScreen]=useState(false)
-    const screenHandle=()=>{
+    const [fullScreen, setFullScreen] = useState(false)
+    const screenHandle = () => {
         console.log(fullScreen)
-        setFullScreen((prev)=>!prev)
+        setFullScreen((prev) => !prev)
     }
 
     //setting
-    const [visible,setVisible]=useState(false)
-    const viewSetting=()=>{
+    const [visible, setVisible] = useState(false)
+    const viewSetting = () => {
         setQualityScreen(false)
         setPlayBAckscreen(false)
-        setVisible((prev)=>!prev)
+        setVisible((prev) => !prev)
     }
 
-    const [playBackcscreen,setPlayBAckscreen] =useState(false)
-    const handleplayBAck =()=>{
+    const [playBackcscreen, setPlayBAckscreen] = useState(false)
+    const handleplayBAck = () => {
         setQualityScreen(false)
-        setPlayBAckscreen((prev)=>!prev)
-        
+        setPlayBAckscreen((prev) => !prev)
+
     }
 
-    const playbackSpeed =(value)=>{
+    const playbackSpeed = (value) => {
         setPlayBAckscreen(false)
-        videoRef.current.playbackRate=value
+        videoRef.current.playbackRate = value
     }
 
-    const[qualityScreen,setQualityScreen]=useState(false)
-    const handleQualityScreen =()=>{
+    const [qualityScreen, setQualityScreen] = useState(false)
+    const handleQualityScreen = () => {
         setPlayBAckscreen(false)
-        setQualityScreen((prev)=>!prev)
+        setQualityScreen((prev) => !prev)
     }
 
-    const handleQuality=(value)=>{
-        hlsInstance.currentLevel=value
+    const handleQuality = (value) => {
+        hlsInstance.currentLevel = value
     }
 
     // fetchh-recomended videos
-    
+
+    const control = controlRef.current
+    control?.addEventListener('mouseover', () => {
+        control.style.opacity = 1
+    })
+    control?.addEventListener('mouseleave', () => {
+        control.style.opacity = 0
+    })
+
     return (
-        <div className={fullScreen?'video fullScreen':"video" }>
+        <div className={fullScreen ? 'video fullScreen' : "video"}>
             <video id='my-video' ref={videoRef}></video>
-            <div className="video-controls">
+            <div ref={controlRef} className="video-controls">
                 <div className='status-bar'>
                     <p>{currentTime}</p>
                     <div className="bar">
@@ -188,19 +197,19 @@ function Videoplayer({ data }) {
                     </div>
                     <div className="controller-right">
                         <i onClick={viewSetting} className="ri-settings-3-line"></i>
-                        <i onClick={screenHandle} className= {fullScreen?'ri-fullscreen-exit-fill':'ri-fullscreen-line' }></i>
+                        <i onClick={screenHandle} className={fullScreen ? 'ri-fullscreen-exit-fill' : 'ri-fullscreen-line'}></i>
                         {visible && <div className='settings'>
                             <p onClick={handleplayBAck}>Playback Speed</p>
                             {playBackcscreen && <div className='play-back'>
-                                <p onClick={()=>playbackSpeed(0.5)}>{'>0.5x'}</p>
-                                <p onClick={()=>playbackSpeed(1)}>{'>1x'}</p>
-                                <p onClick={()=>playbackSpeed(1.5)}>{'>1.5x'}</p>
-                                <p onClick={()=>playbackSpeed(2)}>{'>2x'}</p>
-                            </div> }
+                                <p onClick={() => playbackSpeed(0.5)}>{'>0.5x'}</p>
+                                <p onClick={() => playbackSpeed(1)}>{'>1x'}</p>
+                                <p onClick={() => playbackSpeed(1.5)}>{'>1.5x'}</p>
+                                <p onClick={() => playbackSpeed(2)}>{'>2x'}</p>
+                            </div>}
                             <p onClick={handleQualityScreen}>Quality</p>
                             {qualityScreen && <div className='play-back'>
-                                {qualityLevels.map((level,indx)=>(
-                                    <p key={level.height} onClick={()=>handleQuality(indx)}>{`>${level.height}p`}</p>
+                                {qualityLevels.map((level, indx) => (
+                                    <p key={level.height} onClick={() => handleQuality(indx)}>{`>${level.height}p`}</p>
                                 ))}
                             </div>
                             }

@@ -21,10 +21,8 @@ const Channel = () => {
                 console.log(err)
             })
     }, [userId]);
-    const channelVideos = channelInfo?.totalVideos?.[0].videos
-    const channelShorts = channelInfo?.totalShorts?.[0].short
-    console.log(channelShorts)
-    console.log(channelVideos)
+    const channelVideos = channelInfo?.totalVideos?.[0]?.videos
+    const channelShorts = channelInfo?.totalShorts?.[0]?.short
     const handleDefaultComp =(data)=>{
         setDefaultComp(data)
     }
@@ -47,11 +45,11 @@ const Channel = () => {
                             <div id="other-channel-info2">
                                 <div className='other-channel-info-internal'>
                                     <p>Videos</p>
-                                    <p>{channelInfo?.totalVideos?.[0].totalVideo || 0}</p>
+                                    <p>{channelInfo?.totalVideos?.[0]?.totalVideo || 0}</p>
                                 </div>
                                 <div className='other-channel-info-internal'>
                                     <p>Shorts</p>
-                                    <p>{channelInfo?.totalShorts?.[0].totalShort || 0}</p>
+                                    <p>{channelInfo?.totalShorts?.[0]?.totalShort || 0}</p>
                                 </div>
                             </div>
 

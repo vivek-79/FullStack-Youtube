@@ -1,6 +1,6 @@
 
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import './Video.css'
@@ -18,6 +18,8 @@ function Video() {
     const channelName = data?.owner?.userName
     const [more, setMore] = useState(false)
     const [recomended, setRecomended] = useState('')
+    const [allComment, setAllComment] = useState([])
+    const playerRef = useRef(null)
     useEffect(() => {
         axios.get(`/v1/videos/getvideo-detail/${videoId}`)
             .then((res) => {
@@ -34,7 +36,6 @@ function Video() {
     const [liked, setLiked] = useState(false)
     const [likeCount, setLikeCount] = useState('')
     const [subscribeCount, setLSubscribeCount] = useState('')
-    const comments = chanelInfo?.comments
     useEffect(() => {
         if (userId && channelName) {
             axios.post('/v1/users/c', { userName: channelName, userId: userId, videoId: videoId })
@@ -62,14 +63,27 @@ function Video() {
             });
 
         //add-to-watchHistory
-        axios.post('/v1/users/add-history',{userId,videoId})
-        .then((res)=>{
-            console.log(res)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-    }, [userId, channelName,videoId])
+        axios.post('/v1/users/add-history', { userId, videoId })
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+        //comments 
+        const initialComment = () => {
+            axios.post('/v1/comment/get-comment', { videoId })
+                .then((res) => {
+                    console.log(res)
+                    setAllComment(res.data.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+        initialComment()
+    }, [userId, channelName, videoId])
 
     //subscribe logic
     const ownerId = chanelInfo._id
@@ -100,31 +114,31 @@ function Video() {
     }
 
     //comment
+
     const [comment, setComment] = useState('')
     const handleChange = (e) => {
         setComment(e.target.value)
     }
     const submit = () => {
-        axios.post('/v1/comment/add-comment', { content: comment, userId: userId, videoId: videoId })
+        axios.post('/v1/comment/add-comment', { content: comment, userId, videoId })
             .then((res) => {
                 setComment('')
-                console.log(res)
+                setAllComment(res.data.data)
             })
             .catch((error) => {
                 console.log(error)
             })
     }
-
     const handleDescription = () => {
 
         setMore((prev) => !prev)
     }
-    
+    console.log(allComment)
     return (
         <div className='video'>
             <div className='video-center'>
                 <div className="video-play">
-                    <Videoplayer data={data?.videoFile}></Videoplayer>
+                    <Videoplayer ref={playerRef} data={data?.videoFile}></Videoplayer>
                 </div>
                 <div className="comps">
                     <p className='comps-title'>{data?.title}</p>
@@ -173,24 +187,26 @@ function Video() {
                         </div>
                     </div>
                     <div className="comment-para">
+                        <div className="comment-inpt-small" >
+                            <input type="text" required value={comment} onChange={handleChange} placeholder='Add Your Comment ...' />
+                            <button type='submit' onClick={submit}>Add</button>
+                        </div>
                         <div className="all-comment">
-                            {comments && comments.map((val) => (
+                            {allComment && allComment.map((val) => (
                                 <div className='each-comment' key={val._id}>
+                                    <img src={val.user.avatar} alt="user-pic" />
+                                    <p>{val.user.userName}</p>
                                     <p>{val.content}</p>
                                 </div>
                             ))}
                         </div>
                     </div>
-                    <div className="comment-inpt-small" >
-                        <input type="text" required value={comment} onChange={handleChange} placeholder='Add Your Comment ...' />
-                        <button type='submit' onClick={submit}>Add</button>
-                    </div>
                 </div>
             </div>
-            
+
             <div className="video-side">
                 {recomended && recomended.map((item) => (
-                    <SideCard  data={item} />
+                    <SideCard key={item._id} data={item} />
 
                 ))}
                 {recomended && recomended.map((item) => (
@@ -202,7 +218,7 @@ function Video() {
 
                 ))}
                 {recomended && recomended.map((item) => (
-                    <SideCard data={item}/>
+                    <SideCard data={item} />
 
                 ))}
             </div>

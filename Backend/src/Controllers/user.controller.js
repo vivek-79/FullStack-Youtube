@@ -4,7 +4,6 @@ import { apiResponse } from "../Utils/apiResponse.js";
 import { User } from "../Models/user.model.js";
 import { likeCount } from "./likes.controller.js";
 import { cloudnaryUpload } from "../Utils/cloudinary.js";
-import { Comment } from "../Models/comment.model.js";
 import jwt from 'jsonwebtoken'
 import mongoose from "mongoose";
 import { Like } from "../Models/like.model.js";
@@ -263,11 +262,6 @@ const getChannelDetail = asyncHandler(async(req,res)=>{
         }
     ])
 
-    const comments =await Comment.find({video:videoId}).select('-user -video')
-    if(!comments){
-        throw new apiError(404,'No comments found')
-    }
-    channel[0].comments=comments
     if(videoId){
         const {likes,isLiked} = await likeCount(videoId,userId)
         channel[0].totalLikes=likes
@@ -491,6 +485,126 @@ const getChannelAnalysis = asyncHandler(async(req,res)=>{
         throw new apiError(500,'Cant get information')
     }
 })
+
+const addWatchLater = asyncHandler(async(req,res)=>{
+
+    const {videoId,userId} = req.body
+
+    if(!videoId){
+        throw new apiError(400,'Nothing to add in later')
+    }
+    const user = await User.findById(userId)
+
+    if(!user){
+        throw new apiError(400,'No user found')
+    }
+    try {
+        const video = new mongoose.Types.ObjectId(videoId)
+        if(!user.watchLater.includes(video)){
+            user.watchLater.push(video)
+
+            await user.save()
+            return res.status(200)
+            .json( new apiResponse(200,{},"Added to later"))
+        }
+        else{
+            user.watchLater.pull(video)
+            await user.save()
+            return res.status(200)
+            .json(new apiResponse (200,{},"Removed from later"))
+        }
+    } catch (error) {
+        return res.status(500)
+        .json(new apiResponse(500,{},"server error try later"))
+    }
+})
+
+const getWatchLater = asyncHandler(async(req,res)=>{
+
+    const {userId} = req.body
+    console.log(req.body)
+    if(!userId){
+        throw new apiError(400,'No user found')
+    }
+
+    try {
+        const laterDetail = await User.aggregate([
+            {
+                $match:{
+                    _id: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+               $lookup:{
+                    from:'videos',
+                    localField:'watchLater',
+                    foreignField:'_id',
+                    as:'watchLater',
+                    pipeline:[
+                        {
+                            $lookup:{
+                                from:'users',
+                                localField:'owner',
+                                foreignField:'_id',
+                                as:'owner',
+                                pipeline:[
+                                    {
+                                        $project:{
+                                            userName:1,
+                                            avatar:1
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $addFields:{
+                                owner:{
+                                    $first:"$owner"
+                                }
+                            }
+                        },
+                        {
+                            $project:{
+                                owner:1,
+                                thumbnail:1,
+                                title:1,
+                                views:1
+                            }
+                        }
+                    ]
+                } 
+            },
+            {
+                $project:{
+                    watchLater:1
+                }
+            }
+        ]).exec()
+        return res.status(200)
+        .json( new apiResponse(200,laterDetail,"Videos fetched sucessfully"))
+    } catch (error) {
+        return res.status(500)
+        .json(new apiResponse(500,{},"Unable to get videos"))
+    }
+})
+
+const addPlayList= asyncHandler(async(req,res)=>{
+
+    const {userId} = req.body
+
+    if(!userId){
+        throw new apiError(400,"userId required")
+    }
+
+    const user =await User.findById(userId)
+
+    if(!user){
+        throw new apiError(400,"No user found")
+    }
+
+    
+})
 export {
     registerUser,
     loginUser,
@@ -499,5 +613,8 @@ export {
     getChannelDetail,
     getWatchHistory,
     getChannelAnalysis,
-    addHistory
+    addHistory,
+    addWatchLater,
+    getWatchLater,
+    addPlayList
 }

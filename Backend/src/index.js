@@ -3,7 +3,7 @@ import { app } from "./App.js";
 import connectDb from "./Db/index.js";
 
 dotenv.config({
-    path:'./env',
+    path:'./.env',
 })
 
 connectDb()
@@ -14,5 +14,5 @@ connectDb()
     })
 })
 .catch((err)=>{
-    console.log('Failed To Connect')
+    console.log(err,'Failed To Connect')
 })

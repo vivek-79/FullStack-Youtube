@@ -13,7 +13,7 @@ form{
     padding: 40px 0;
     background-color: rgba(189, 213, 239, 0.125);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.541);
+    border: 1px solid rgba(255, 255, 255, 0.138);
     backdrop-filter: blur(30px);
 }
 .form-input{

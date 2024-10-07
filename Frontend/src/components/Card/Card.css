@@ -1,13 +1,14 @@
 
 .card{
-    width: max(23vw,250px);
+    width: max(23vw,300px);
     height: max(270px,19vw);
     padding: 0%;
+    position: relative;
     border-radius: 15px;
     display: flex;
-    flex-grow: 0.3;
     flex-direction: column;
     flex-wrap: wrap;
+
 }
 
 .card-upper{
@@ -31,6 +32,7 @@
     height: 25%;
     width: 100%;
     display: flex;
+    position: relative;
     flex-direction: column;
     padding:2px 5px 0 1px;
     flex-wrap: nowrap;
@@ -70,4 +72,76 @@
 .card-info{
     font-size: 13px;
     line-height: 15px;
+}
+.card-options{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    cursor: pointer;
+    transform:rotate(90deg);
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.455);
+}
+.show-option{
+    position: absolute;
+    bottom: 5px;
+    cursor: pointer;
+    right: 25px;
+    padding:0 6px;
+    border-radius: 10px;
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.188);
+}
+.show-option p{
+    border-bottom: 1px solid rgba(82, 75, 75, 0.762);
+    width: 100%;
+    text-align: left;
+}
+.user-play-lists{
+    padding: 0 3px;
+    width: 100%;
+    min-height: 42px;
+    border-radius: 10px;
+    bottom: 0px;
+    left: 1px;
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.177);
+    background-color: rgba(57, 52, 52, 0.504);
+    backdrop-filter: blur(15px);
+}
+@media(max-width:1272px){
+    .card{
+        width: max(31vw,290px);
+    }
+}
+@media(max-width:925px){
+    .card{
+        width: max(47vw,300px);
+    }
+}
+@media(max-width:634px){
+    .card{
+        width: max(47vw,230px);
+    }
+}
+@media(max-width:534px){
+    .card{
+        width:93vw;
+        height: 310px;
+    }
+    .card-title{
+        font-size: 17px;
+    }
+    .card-upper{
+        height: 230px;
+        width: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+        object-position: center;
+    }
+    .card-channel{
+        font-size: 15px;
+    }
 }

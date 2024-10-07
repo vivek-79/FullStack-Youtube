@@ -1,0 +1,68 @@
+
+
+.play-playlist{
+    width: 100%;
+    height: 91.5vh;
+
+}
+.play-playlist-head{
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.226);
+    height:max(20%,17vw);
+    display: flex;
+}
+.play-playlist-wallPaper{
+    width: max(25%,200px);
+    height: 100%;
+}
+.play-playlist-wallPaper img{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    object-position: center;
+}
+.play-playlist-info{
+    height: 100%;
+    flex-grow: 1;
+    position: relative;
+}
+.head-info{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    align-items: flex-end;
+    bottom: 0;
+    height: 100%;
+    background-color: rgba(165, 236, 250, 0.373);
+    backdrop-filter: blur(5px);
+}
+.head-info p{
+    font-size: 17px;
+    text-transform: uppercase;
+}
+.head-info i{
+    font-size: 18px;
+}
+.play-playlist-content{
+    margin-top: 5px;
+    width: 100%;
+    height: calc(91.5vh - max(20%,17vw));
+    display: flex;
+    gap: 10px;
+    flex-wrap:wrap;
+    padding-left: 10px;
+    overflow: auto;
+}
+
+.play-playlist-content::-webkit-scrollbar{
+    width: 3px;
+    color: black;
+}
+
+.play-playlist-content::-webkit-scrollbar-thumb{
+    background-color: rgba(240, 248, 255, 0.401);
+    border-radius: 15px;
+}

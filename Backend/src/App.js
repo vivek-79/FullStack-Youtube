@@ -26,6 +26,7 @@ import { subscriptionRoute } from "./Routes/subscribtion.routes.js"
 import { likeRoute } from "./Routes/likes.routes.js"
 import { commentRoute } from "./Routes/comment.routes.js"
 import { shortRoute } from "./Routes/short.routes.js"
+import { playListrouter } from "./Routes/playList.routes.js"
 
 //route declare
 
@@ -35,5 +36,6 @@ app.use('/api/v1/subscription',subscriptionRoute)
 app.use('/api/v1/likes',likeRoute)
 app.use('/api/v1/comment',commentRoute)
 app.use('/api/v1/short',shortRoute)
+app.use('/api/v1/playlist',playListrouter)
 
 export {app}

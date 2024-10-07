@@ -5,12 +5,10 @@ import { Aside, Card } from '../../components'
 import './Home.css'
 import Navbar from '../../components/Navbar/Navbar'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
 
 function Home() {
   const [data,setData] = useState([])
 
-  const state = useSelector((state)=>state.compSlice.status)
   useEffect(()=>{
     axios.post('/v1/videos/getvideo?page=1&limit=10')
     .then(res => {
@@ -24,7 +22,6 @@ function Home() {
   return (
     <div className='space-nav'>
         <div className='home'>
-        { state && <div className='side'><Aside/></div> }     
         <div className='main'>
           <div>
             <Navbar/>

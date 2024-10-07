@@ -9,6 +9,6 @@ commentRoute.use(verifyLogin)
 
 commentRoute.route('/add-comment').post(addComment)
 commentRoute.route('/add-comment-short').post(shortComment)
-commentRoute.route('/get-comment-short').post(getComments)
+commentRoute.route('/get-comment').post(getComments)
 
 export {commentRoute}

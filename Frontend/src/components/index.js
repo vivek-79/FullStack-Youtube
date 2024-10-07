@@ -4,6 +4,7 @@ import Aside from "./Aside/Aside";
 import Card from "./Card/Card";
 import SideCard from "./SideCard/SideCard";
 import ShortComp from "./ShortComp";
+import PlaylistCard from "./PlaylistCard";
 
 export {
     Header,
@@ -11,5 +12,6 @@ export {
     Aside,
     Card,
     SideCard,
-    ShortComp
+    ShortComp,
+    PlaylistCard
 }

@@ -58,7 +58,7 @@ header {
     border: 1px solid rgba(255, 255, 255, 0.392);
     height: 30px;
     border-radius: 15px 0 0 15px;
-    color: white;
+    color: rgba(255, 255, 255, 0.619);
     padding: 0 15px;
     border-right: none;
     font-size: 15px;
@@ -71,7 +71,7 @@ header {
     border-left: none;
     background-color:rgba(46, 43, 43, 0.919);
 }
-.header-center .voice{
+.header-center .voices{
     font-size: 20px;
     padding: 3px 6px;
     border-radius: 50%;
@@ -127,4 +127,100 @@ header {
 }
 .add-video p:nth-child(2){
     color: rgba(0, 0, 0, 0.295);
+}
+.toggler-icon{
+    display: none;
+}
+#back-btn{
+    font-size: 25px;
+    position: relative;
+    margin-left: -5px;
+}
+.header-search-mini{
+    display: flex;
+    position: absolute;
+    width: 100%;
+    left: 35px;
+}
+.header-search-mini input{
+    width: 70%;
+    background-color: transparent;
+    outline: none;
+    border: 1px solid rgba(255, 255, 255, 0.392);
+    height: 40px;
+    border-radius: 15px 0 0 15px;
+    color: white;
+    padding: 0 15px;
+    border-right: none;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.619);
+    z-index: 9;
+}
+.header-search-mini i{
+    font-size: 22px;
+    padding:7px 10px;
+    border-radius: 0 15px 15px 0;
+    border: 1px solid  rgba(255, 255, 255, 0.392);
+    border-left: none;
+    background-color:rgba(46, 43, 43, 0.919);
+}
+.header-search-mini{
+    display: none;
+}
+
+@media(max-width:600px){
+
+    .header-center{
+        align-items: center;
+        justify-content: end;
+        padding-right: 15px;
+    }
+    .header-search-hide{
+        display: none;
+    }
+    .header-search{
+        position: absolute;
+        right: 30%;
+    }
+    .header-center .voices{
+        position: absolute;
+        right: 21%;
+    }
+}
+@media(max-width:492px){
+    .header-search{
+        display: none;
+    }
+    .header-search-mini{
+        display: flex;
+    }
+    .toggler-icon{
+        display: block;
+        position: absolute;
+        right: 40%;
+        background-color:rgba(46, 43, 43, 0.919);
+        padding:6px 7px;
+        font-size: 20px;
+        border-radius: 50px;
+    }
+    .voice {
+        position: relative;
+        margin-top: 8px;
+        margin-left: 5px;
+    }
+    .header-center .voices{
+        position: absolute;
+        right: 31%;
+    }
+    .voice i{
+        border: 1px solid rgba(255, 255, 255, 0.208);
+        border-radius: 50%;
+        padding: 8px 8px;
+    }
+}
+@media(max-width:370px){
+    .header-center{
+        padding-right: 5px;
+        gap: 4px;
+    }
 }

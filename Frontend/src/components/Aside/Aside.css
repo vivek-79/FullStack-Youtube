@@ -21,6 +21,10 @@
   text-decoration: none;
   color: white;
 }
+
+.option:hover{
+    background-color:  rgba(32, 31, 31, 0.534);
+}
 .active{
     background-color:  rgb(32, 31, 31);
 }
