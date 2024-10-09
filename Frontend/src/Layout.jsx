@@ -3,11 +3,14 @@ import {Header,Footer, Aside} from './components/index'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { search } from './Store/componentSlice'
 import './Layout.css'
+import axios from 'axios'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector ,useDispatch} from 'react-redux'
+import { logIn } from './Store/AuthSlice'
 
 function Layout() {
+
   const show = useSelector((state)=>state.compSlice.status)
   const searchResult = useSelector((state)=>state.compSlice.data)
   const dispatch=useDispatch()
@@ -17,6 +20,17 @@ function Layout() {
     dispatch(search({}))
     navigate(`/videos/${videoId}`)
   }
+
+  useEffect(()=>{
+    axios.get('/v1/users/get-user-details')
+    .then((res)=>{
+      dispatch(logIn(res.data))
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  },[])
   return (
     <div>
         <Header/>

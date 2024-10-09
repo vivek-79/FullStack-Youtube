@@ -135,7 +135,7 @@ function Video() {
     }
     console.log(allComment)
     return (
-        <div className='video'>
+        <div className='video' id='video'>
             <div className='video-center'>
                 <div className="video-play">
                     <Videoplayer ref={playerRef} data={data?.videoFile}></Videoplayer>
@@ -176,29 +176,29 @@ function Video() {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="comments">
-                    <div className="description">
-                        <div className='desc-message'>
-                            <p>{data?.description}</p>
+                    <div className="comments">
+                        <div className="description">
+                            <div className='desc-message'>
+                                <p>{data?.description}</p>
+                            </div>
+                            <div className={more ? 'less' : 'more'}>
+                                <p onClick={handleDescription}>{more ? 'less ^' : 'more...'}</p>
+                            </div>
                         </div>
-                        <div className={more ? 'less' : 'more'}>
-                            <p onClick={handleDescription}>{more ? 'less ^' : 'more...'}</p>
-                        </div>
-                    </div>
-                    <div className="comment-para">
-                        <div className="comment-inpt-small" >
-                            <input type="text" required value={comment} onChange={handleChange} placeholder='Add Your Comment ...' />
-                            <button type='submit' onClick={submit}>Add</button>
-                        </div>
-                        <div className="all-comment">
-                            {allComment && allComment.map((val) => (
-                                <div className='each-comment' key={val._id}>
-                                    <img src={val.user.avatar} alt="user-pic" />
-                                    <p>{val.user.userName}</p>
-                                    <p>{val.content}</p>
-                                </div>
-                            ))}
+                        <div className="comment-para">
+                            <div className="comment-inpt-small" >
+                                <input type="text" required value={comment} onChange={handleChange} placeholder='Add Your Comment ...' />
+                                <button type='submit' onClick={submit}>Add</button>
+                            </div>
+                            <div className="all-comment">
+                                {allComment && allComment.map((val) => (
+                                    <div className='each-comment' key={val._id}>
+                                        <img src={val.user.avatar} alt="user-pic" />
+                                        <p>{val.user.userName}</p>
+                                        <p>{val.content}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

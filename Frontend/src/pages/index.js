@@ -11,6 +11,7 @@ import WatchHist from './WatchHistory/WatchHist.jsx'
 import WatchLater from './WatchLater/WatchLater.jsx'
 import PlayList from './PlayList/PlayList.jsx'
 import PlayPlaylist from './PlayPlaylist/PlayPlaylist.jsx'
+import Subscription from './Subscriptions/Subscription.jsx'
 
 export {
     Register,
@@ -24,5 +25,6 @@ export {
     WatchHist,
     WatchLater,
     PlayList,
-    PlayPlaylist
+    PlayPlaylist,
+    Subscription
 }

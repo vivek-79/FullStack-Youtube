@@ -1,0 +1,18 @@
+
+.sub-home{
+    width: 100%;
+    height: 85%;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    gap: 15px;
+    
+}
+.sub-home::-webkit-scrollbar{
+    width: 3px;
+    background-color: black;
+}
+.sub-home::-webkit-scrollbar-thumb{
+    background-color: rgba(255, 255, 255, 0.514);
+    border-radius: 15px;
+}

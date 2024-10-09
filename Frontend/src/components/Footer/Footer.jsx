@@ -3,7 +3,9 @@ import React from 'react'
 import './footer.css'
 function Footer() {
   return (
-    <footer>footer</footer>
+    <footer>
+      <p>&copy; All  rights reserved</p>
+    </footer>
   )
 }
 

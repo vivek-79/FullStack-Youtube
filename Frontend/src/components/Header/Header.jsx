@@ -2,15 +2,17 @@ import React, { useState } from 'react'
 import './Header.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { toggl,search } from '../../Store/componentSlice'
+import { toggl, search } from '../../Store/componentSlice'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { logOut } from '../../Store/AuthSlice'
 function Header() {
 
   const authStatus = useSelector((state) => state.authState.status)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [showSearch, setShowSearch] = useState(false)
+  const [showProfile, setShowProfile] = useState(false)
 
   const [upload, setUpload] = useState(false)
 
@@ -18,18 +20,27 @@ function Header() {
     setUpload((prev) => !prev)
   }
 
-  const handleSearch=(e)=>{
+  const handleSearch = (e) => {
     const input = e.target.value
-    if(input ===''){
+    if (input === '') {
       dispatch(search({}))
     }
-    axios.post('/v1/videos/getsearch',{input})
+    axios.post('/v1/videos/getsearch', { input })
+      .then((res) => {
+        dispatch(search(res.data.data))
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const logoutHandler = () => {
+    axios.post('/v1/users/logout')
     .then((res)=>{
-      dispatch(search(res.data.data))
+      dispatch(logOut())
     })
-    .catch((err)=>{
-      console.log(err)
-    })
+    setShowProfile(false)
+    navigate('/login')
   }
   return (
     <header>
@@ -37,7 +48,7 @@ function Header() {
       {showSearch && <i id='back-btn' onClick={() => setShowSearch(false)} className="ri-arrow-left-line"></i>}
       {showSearch ? <div className='header-search-mini'>
         <input id='search-mini' onInput={handleSearch} type="text" placeholder='Search' />
-        <i className="ri-search-line"></i>
+        <i id='search-icon' className="ri-search-line"></i>
         <div className='voice'>
           <i className="ri-mic-line"></i>
         </div>
@@ -59,15 +70,17 @@ function Header() {
         </div>}
       </div>
       {!showSearch && <div className="header-side2">
-        <i onClick={(e)=>handleUpload()} className="ri-video-add-line"></i>
+        <i id='uploader' onClick={(e) => handleUpload()} className="ri-video-add-line"></i>
         {upload && <div className='add-video'>
           <Link className='Link' to='/upload-video'><p onClick={handleUpload}>Video</p></Link>
-          <p>|</p>
           <Link className='Link' to='/upload-short'><p onClick={handleUpload}>Short</p></Link>
         </div>}
-        <i className="ri-notification-4-line"></i>
+        <i id='notification' className="ri-notification-4-line"></i>
         {authStatus ? <div className='header-profile'>
-          <img src="https://imgs.search.brave.com/4E-FnJGrz16zTTKMxT6IA176mvQocIm8f9MuFxI-Cp0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9kZXNp/Z253aXphcmQuY29t/L2Jsb2cveW91dHVi/ZS10aHVtYm5haWwt/c2l6ZS9yZXNpemUv/YWRkLXRleHQteW91/dHViZS10aHVtYm5h/aWxfMTY1ODc0MTE1/NjEyNF9yZXNpemUu/anBn" alt="" />
+          {showProfile && <div id='profile-setting'>
+            <button onClick={logoutHandler}>Logout</button>
+          </div>}
+          <img onClick={() => setShowProfile((prev) => !prev)} src="https://imgs.search.brave.com/4E-FnJGrz16zTTKMxT6IA176mvQocIm8f9MuFxI-Cp0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9kZXNp/Z253aXphcmQuY29t/L2Jsb2cveW91dHVi/ZS10aHVtYm5haWwt/c2l6ZS9yZXNpemUv/YWRkLXRleHQteW91/dHViZS10aHVtYm5h/aWxfMTY1ODc0MTE1/NjEyNF9yZXNpemUu/anBn" alt="" />
         </div> : <button onClick={() => navigate('/login')}>Login</button>}
       </div>}
     </header>

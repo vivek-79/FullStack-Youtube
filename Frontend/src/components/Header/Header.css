@@ -1,10 +1,10 @@
 
 
 header {
-    position:fixed;
-    top:0;
-    left: 1%;
-    width: 98%;
+    position:relative;
+    margin-top: -30px;
+    margin-left: -30px;
+    width: 98vw;
     height: 45px;
     background-color: black;
     display: flex;
@@ -32,6 +32,7 @@ header {
 .header-profile{
     width: 25px;
     height: 25px;
+    position: relative;
     border: 1px solid;
     border-radius: 50%;
     overflow: hidden;
@@ -106,25 +107,46 @@ header {
 }
 
 .add-video{
-    min-width: max(105px,9vw);
-    background-color: white;
-    color: black;
-    position: absolute;
+    background-color: rgba(185, 207, 226, 0.485);
+    backdrop-filter: blur(10px);
+    border:1px solid rgba(255, 255, 255, 0.263) ;
+    border-radius: 5px;
+    position:fixed;
     display: flex;
-    bottom: 0px;
+    flex-direction: column;
+    top:35px;
+    gap: 5px;
+    font-size: 20px;
+    min-width: 100px;
     right: 100px;
     z-index: 9;
-    gap: 5px;
-    height: 30px;
+    padding: 5px;
     align-items: center;
     font-size: 17px;
-    padding: 0 5px;
     border-radius: 10px;
 }
 .add-video p{
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.695);
+    background-color: black;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 30px;
 }
+#notification{
+    position: relative;
+    display: inline-block;
+}
+#notification::after{
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+}
+
 .add-video p:nth-child(2){
     color: rgba(0, 0, 0, 0.295);
 }
@@ -135,6 +157,7 @@ header {
     font-size: 25px;
     position: relative;
     margin-left: -5px;
+    margin-top: -4px;
 }
 .header-search-mini{
     display: flex;
@@ -167,7 +190,35 @@ header {
 .header-search-mini{
     display: none;
 }
-
+.header-profile #profile-setting{
+    width: 120px;
+    right: 35px;
+    padding: 5px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 40px;
+    background-color: rgba(185, 207, 226, 0.485);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.263);
+    backdrop-filter: blur(10px);
+    z-index: 999999;
+}
+#profile-setting button{
+    background-color: black;
+    color: white;
+}
+@media (min-width:1300px){
+    header{
+        margin-left:min(-8vw,-30px);
+        width: 97vw;
+        overflow: hidden;
+    }
+    .header-side{
+        position: relative;
+        left: -5px;
+    }
+}
 @media(max-width:600px){
 
     .header-center{
@@ -192,7 +243,11 @@ header {
         display: none;
     }
     .header-search-mini{
+        width: 94%;
+        height: 35px;
+        top: 2px;
         display: flex;
+        align-items: center;
     }
     .toggler-icon{
         display: block;
@@ -200,12 +255,12 @@ header {
         right: 40%;
         background-color:rgba(46, 43, 43, 0.919);
         padding:6px 7px;
-        font-size: 20px;
+        font-size: 16px;
         border-radius: 50px;
     }
     .voice {
         position: relative;
-        margin-top: 8px;
+        margin-top: -3px;
         margin-left: 5px;
     }
     .header-center .voices{
@@ -216,11 +271,33 @@ header {
         border: 1px solid rgba(255, 255, 255, 0.208);
         border-radius: 50%;
         padding: 8px 8px;
+        font-size: 16px;
+        top:0;
+    }
+    .header-search-mini input{
+        height: 36.71px;
+        margin-top: 2.5px;
+    }
+    #search-icon{
+        height: 36.71px;
+        margin-top: 2.5px;
     }
 }
 @media(max-width:370px){
     .header-center{
         padding-right: 5px;
         gap: 4px;
+    }
+    .header-side h2{
+        font-size: 16px;
+    }
+    .header-center .voices{
+        font-size: 15px;
+    }
+    .toggler-icon{
+        font-size: 15px;
+    }
+    #uploader{
+        display: none;
     }
 }

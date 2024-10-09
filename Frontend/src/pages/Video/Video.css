@@ -42,7 +42,7 @@
 .video-play{
     width:100%;
     height: 100%;
-    height:max(75vw,67vh);
+    height:max(60vw,65vh);
     border-radius: 15px;
     overflow: hidden;
 }
@@ -50,35 +50,48 @@
     width: 100%;
     height: 100%;
 }
+.video-play .video video{
+    object-fit: fill;
+}
 .comps{
     width: 100%;
-    min-height: 100px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 5px;
+    overflow: auto;
     justify-content: space-between;
 }
 
 .comps .comps-title{
     position: relative;
     margin-top: 10px;
-    margin-left: 10px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    text-align: left;
 }
 .comments{
     width: 100%;
-    overflow: auto;
-    height: 26vh;
+    height: 300px;
     display: flex;
     flex-direction: column;
     position: relative;
     margin-top: 2.2vh;
 }
+.comments::-webkit-scrollbar{
+    width: 3px;
+    background-color: black;
+}
+.comments::-webkit-scrollbar-thumb{
+    background-color: rgba(255, 255, 255, 0.319);
+    border-radius: 15px;
+}
 .comments:last-child{
     margin-bottom: 10px;
 }
 
-.comments::-webkit-scrollbar{
+.comps::-webkit-scrollbar{
     display: none;
 }
 .comp-lower {
@@ -159,7 +172,7 @@
 }
 .description{
     width: 100%;
-    height: 100px;
+    min-height: 0px;
     position: relative;
     padding: 10px;
 }
@@ -219,22 +232,24 @@
     font-size: 17px;
     color: rgba(255, 255, 255, 0.563);
 }
-@media (max-width:800px){
+@media (max-width:801px){
     .video{
         flex-direction: column;
         gap: 60px;
     }
     .video-center{
-        width: 95%;
+        width: 98%;
         margin: auto;
+        height: 100vh;
+        overflow: auto;
     }
     .video-side{
         width: 96%;
-        position: relative;
+        position: absolute;
         margin: auto;
         overflow:auto;
-        min-height:100%;
-        margin-top: -60px;
+        height:100%;
+        margin-top: 82vh;
         margin-bottom: 15px;
     }
     .video{
@@ -244,6 +259,11 @@
         bottom: 10px;
         width: 100%;
 
+    }
+    .comments{
+        height: 150px;
+        overflow: auto;
+        margin-bottom: 10px;
     }
     
     .comment-inpt-small input{
@@ -260,17 +280,33 @@
         backdrop-filter: blur(20px);
     }
     .video-play{
-    width:100%;
-    height: 100%;
-    height: max(60%,50vh);
+    width:99%;
+    margin-left: -12px;
+    top: 42px;
+    position: fixed;
+    height:45vh;
     border-radius: 15px;
     overflow: hidden;
+    z-index: 9999;
     }
     .comments{
         border-bottom: 1px solid rgba(255, 255, 255, 0.179);
     }
+   
+    .comps{
+        margin-top:35vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     
 }
+@media (max-width:720px){
+    .video-play{
+        width:100%;
+    }
+}
+
 
 @media (max-width:575px){
     .comp-lower{
@@ -294,30 +330,47 @@
         position: absolute;
         right: 0%;
     }
-    .comps .comps-title{
-        margin-bottom: 10px;
-        text-align: left;
+    .comps{
+        margin-top:45vh;
     }
     .video-side{
-     
-        margin-top: -64px;
-        margin-bottom: 15px;
+        margin-top: 83.5vh;
+        margin-left: 5px;
     }
-    .comments{
+    .video-center{
+        width: 98%;
+        margin: auto;
         position: relative;
-        margin-top: 20px;
+        margin-top: -1vh;
+        height: 85vh;
+        overflow: auto;
     }
 }
+
 @media(max-width:465px){
     .comments{
         margin-top: 30px;
     }
-}
-@media (max-width:360px){
-    .video-side{
-        margin-top: 20px;
+    .video-play{
+        width:100%;
+        margin-left: -7.5px;
     }
 }
+
+@media (max-width:361px){
+    
+    .video-play{
+        width:99%;
+        margin-left: -2.5px;
+    }
+}
+@media(max-width:309px){
+    .video-play{
+        width:100%;
+        margin-left: -2.5px;
+    }
+}
+
 .video{
     position: relative;
 }
@@ -460,7 +513,9 @@
 
 .fullScreen{
     width: 100vw;
+    margin-top: -7px;
     height: 100vh;
+    margin-left: -6px;
     position: fixed;
     top: 0%;
     left: 0%;

@@ -57,7 +57,7 @@
 }
 .card-title{
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 370;
     text-align: left;
     position: relative;
     margin-left: 42px;
@@ -111,14 +111,20 @@
     background-color: rgba(57, 52, 52, 0.504);
     backdrop-filter: blur(15px);
 }
+@media(min-width:1273px){
+    .card{
+        width:24%;
+    }
+}
 @media(max-width:1272px){
     .card{
-        width: max(31vw,290px);
+        width:32%;
     }
 }
 @media(max-width:925px){
     .card{
-        width: max(47vw,300px);
+        width: 47%;
+        margin-right: 10px;
     }
 }
 @media(max-width:634px){
@@ -128,20 +134,23 @@
 }
 @media(max-width:534px){
     .card{
-        width:93vw;
-        height: 310px;
+        width:94vw;
+        height: 360px;
+        margin-left: 5px;
     }
     .card-title{
+        margin-top: 5px;
         font-size: 17px;
+        font-weight: 370;
     }
     .card-upper{
-        height: 230px;
+        height: 270px;
         width: 100%;
         border-radius: 15px;
         overflow: hidden;
         object-position: center;
     }
     .card-channel{
-        font-size: 15px;
+        font-size: 16px;
     }
 }

@@ -2,7 +2,7 @@
 
 .side-card{
     width: 100%;
-    height: 140px;
+    height: 110px;
     display: flex;
     margin-top: 10px;
     border: 1px solid rgba(255, 255, 255, 0.134);
@@ -39,7 +39,7 @@
 }
 .side-card-title p{
     color: rgba(246, 239, 239, 0.775);
-    font-size: 15px;
+    font-size: 13px;
     text-align: left;
 }
 .side-card-owner{

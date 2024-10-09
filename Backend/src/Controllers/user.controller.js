@@ -152,6 +152,14 @@ const logoutUser =asyncHandler(async(req,res)=>{
     )
 })
 
+const getUserDetails = asyncHandler(async(req,res)=>{
+
+    console.log(req.user)
+    const user= req.user
+    return res.status(200)
+    .json(new apiResponse(200,{user:user},"fetched"))
+})
+
 const refreshaccessToken = asyncHandler(async(req,res)=>{
 
     const inconimgRefreshToken = req.cookie?.refreshToken || req.body.refreshToken
@@ -605,6 +613,99 @@ const addPlayList= asyncHandler(async(req,res)=>{
 
     
 })
+
+const getSubscription = asyncHandler(async(req,res)=>{
+
+    const {userId} = req.body
+    console.log(userId)
+    if(!userId){
+        throw new apiError(400,'No Id found')
+    }
+    try {
+        
+        const channels = await Subscription.aggregate([
+            {
+                $match:{
+                    subscriber: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup:{
+                    from:'users',
+                    localField:'channel',
+                    foreignField:'_id',
+                    as:'channel',
+                    pipeline:[
+                        {
+                            $project:{
+                                userName:1,
+                                avatar:1,
+                            }
+                        }
+                    ]
+                }
+            }
+        ])
+        return res.status(200)
+        .json(new apiResponse(200,channels,"fetched successfully"))
+
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500)
+        .json( new apiResponse(500,{},"Server error"))
+    }
+})
+
+const getChannelVideos = asyncHandler(async(req,res)=>{
+    
+    const {ownerId}=req.body
+    console.log(req.body)
+    if(!ownerId){
+        throw new apiError(400,"No ownerId found")
+    }
+    try {
+        const channelInfo = await Video.aggregate([
+            {
+                $match:{
+                    owner:new mongoose.Types.ObjectId(ownerId)
+                }
+            },
+            {
+                $lookup:{
+                    from:'users',
+                    localField:'owner',
+                    foreignField:'_id',
+                    as:'owner',
+                    pipeline:[
+                        {
+                            $project:{
+                                userName:1,
+                                avatar:1,
+                                _id:0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project:{
+                    thumbnail:1,
+                    views:1,
+                    title:1,
+                    owner:1
+                }
+            }
+            
+        ])
+        return res.status(200)
+        .json(new apiResponse(200,channelInfo,"Success"))
+    } catch (error) {
+        
+        return res.status(500)
+        .json(new apiResponse(500,{},"Server error"))
+    }
+})
+
 export {
     registerUser,
     loginUser,
@@ -616,5 +717,8 @@ export {
     addHistory,
     addWatchLater,
     getWatchLater,
-    addPlayList
+    addPlayList,
+    getSubscription,
+    getChannelVideos,
+    getUserDetails
 }

@@ -7,7 +7,6 @@ const verifyLogin = asyncHandler(async(req,_,next)=>{
 
    try {
      const token = req.cookies?.accessToken || req.header('Autherization')?.replace('Bearer ','')
-    
      if(!token){
          throw new apiError(404,'Unauthorized request')
      }

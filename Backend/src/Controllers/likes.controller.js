@@ -63,7 +63,7 @@ const likeShort = asyncHandler(async(req,res)=>{
 
     const {userId,shortId,ownerId} =req.body
     if(!userId || !shortId || !ownerId){
-        throw new apiError(404,'UserId or Short is missing')
+        throw new apiError(400,'UserId or Short is missing')
     }
 
     const isLiked = await Like.findOne({
