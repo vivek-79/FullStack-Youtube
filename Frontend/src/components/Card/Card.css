@@ -80,35 +80,39 @@
     cursor: pointer;
     transform:rotate(90deg);
     font-size: 20px;
-    color: rgba(255, 255, 255, 0.455);
+    color: rgba(255, 255, 255, 0.562);
 }
 .show-option{
     position: absolute;
     bottom: 5px;
     cursor: pointer;
     right: 25px;
-    padding:0 6px;
+    padding:2px 2px;
     border-radius: 10px;
     font-size: 15px;
     display: flex;
     flex-direction: column;
-    background-color: rgba(255, 255, 255, 0.188);
+    background-color: rgba(255, 255, 255, 0.437);
+    backdrop-filter: blur(8px);
 }
 .show-option p{
     border-bottom: 1px solid rgba(82, 75, 75, 0.762);
+    background-color: rgba(0, 0, 0, 0.085);
     width: 100%;
     text-align: left;
+    font-weight: 450;
+    margin-bottom: 2px;
 }
 .user-play-lists{
     padding: 0 3px;
     width: 100%;
-    min-height: 42px;
+    height: 100%;
     border-radius: 10px;
     bottom: 0px;
     left: 1px;
     position: absolute;
     border: 1px solid rgba(255, 255, 255, 0.177);
-    background-color: rgba(57, 52, 52, 0.504);
+    background-color: rgba(32, 28, 28, 0.818);
     backdrop-filter: blur(15px);
 }
 @media(min-width:1273px){

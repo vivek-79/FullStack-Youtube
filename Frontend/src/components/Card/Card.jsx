@@ -12,13 +12,14 @@ function Card(
     views = 0,
     owner = 'Chai',
     video,
+    ownerId,
     videoId,
     avatar = '',
     later = 'Watch later',
     playlist = 'Add to playlist'
   }
 ) {
-  const userId = useSelector((state) => state.authState.userData?.data?.user._id)
+  const userId = useSelector((state) => state.authState.userData?.data?.user?._id)
   const [option, setOption] = useState(false)
   const [showPlaylists, setShowPlaylists] = useState(false)
   const [playlists, setPlaylists] = useState([])
@@ -91,6 +92,7 @@ function Card(
       {option && <div className="show-option">
         <p onClick={handleSaveWatch}>{later}</p>
         <p onClick={handleShowPlayListOptions}>{playlist}</p>
+        {userId ===ownerId ? <p  onClick={()=>navigate('/detail',{state:{videoId:videoId}})}>Details</p> :''}
         {showPlaylists && <div onClick={handleOption} className='user-play-lists'>
           {playlists && playlists.map((item) => (
             <p onClick={() => handleAdd(item._id, videoId)} key={item?._id}>{item.name}</p>

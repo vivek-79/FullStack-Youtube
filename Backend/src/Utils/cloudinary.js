@@ -25,6 +25,7 @@ const cloudnaryUpload =async(localFilePath)=>{
     }
 }
 const cloudnaryDelete =async(publicId)=>{
+    console.log(publicId)
     try {
         if(!publicId) return null
          await cloudinary.uploader.destroy(publicId,(error,result)=>{

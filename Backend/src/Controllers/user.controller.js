@@ -3,7 +3,7 @@ import { apiError } from "../Utils/apiError.js";
 import { apiResponse } from "../Utils/apiResponse.js";
 import { User } from "../Models/user.model.js";
 import { likeCount } from "./likes.controller.js";
-import { cloudnaryUpload } from "../Utils/cloudinary.js";
+import { cloudnaryDelete, cloudnaryUpload } from "../Utils/cloudinary.js";
 import jwt from 'jsonwebtoken'
 import mongoose from "mongoose";
 import { Like } from "../Models/like.model.js";
@@ -12,397 +12,362 @@ import { Video } from "../Models/video.model.js";
 import { Short } from "../Models/short.model.js";
 
 
-const registerUser = asyncHandler(async(req,res)=>{
+const registerUser = asyncHandler(async (req, res) => {
 
-    const {userName,fullName,email,password} =req.body
+    const { userName, fullName, email, password } = req.body
 
-    if(
-        [userName,fullName,email,password].some((field)=>
-            field.trim() ==='')
-    ){
-        throw new apiError(400,'All fields are required')
+    if (
+        [userName, fullName, email, password].some((field) =>
+            field.trim() === '')
+    ) {
+        throw new apiError(400, 'All fields are required')
     }
 
     const alreadyExist = await User.findOne({
-        $or:[{email},{userName}]
+        $or: [{ email }, { userName }]
     })
-    if (alreadyExist){
-        throw new apiError(401,'User already exist')
+    if (alreadyExist) {
+        throw new apiError(401, 'User already exist')
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path
-    const coverImageLocalPath =req.files?.coverImage?.[0].path
+    const coverImageLocalPath = req.files?.coverImage?.[0].path
 
-    if(!avatarLocalPath){
-        throw new apiError(403,'Avatar is required')
+    if (!avatarLocalPath) {
+        throw new apiError(403, 'Avatar is required')
     }
     const avatar = await cloudnaryUpload(avatarLocalPath)
-    if(!avatar){
-        throw new apiError(403,'Avatar is required')
+    if (!avatar) {
+        throw new apiError(403, 'Avatar is required')
     }
-    let coverImage =''
-    if(coverImageLocalPath){
-        coverImage=await cloudnaryUpload(coverImageLocalPath)
+    let coverImage = ''
+    if (coverImageLocalPath) {
+        coverImage = await cloudnaryUpload(coverImageLocalPath)
     }
 
-    const user =await User.create({
+    const user = await User.create({
         fullName,
-        userName:userName.toLowerCase(),
+        userName: userName.toLowerCase(),
         email,
-        avatar:avatar.url,
-        coverImage:coverImage.url,
+        avatar: avatar.url,
+        coverImage: coverImage.url,
         password
     })
-    
-    const existUser =await User.findById(user._id).select('-password -refreshToken')
 
-    if(!existUser){
-        throw new apiError(500,'Something wrong while creating user')
+    const existUser = await User.findById(user._id).select('-password -refreshToken')
+
+    if (!existUser) {
+        throw new apiError(500, 'Something wrong while creating user')
     }
-    return res 
-    .status(200)
-    .json( new apiResponse(
-        200,
-        existUser,
-        'User created'
-    ))
+    return res
+        .status(200)
+        .json(new apiResponse(
+            200,
+            existUser,
+            'User created'
+        ))
 
 })
 
-const loginUser = asyncHandler(async(req,res)=>{
+const loginUser = asyncHandler(async (req, res) => {
 
-    const {userName,email,password} =req.body
+    const { userName, email, password } = req.body
     console.log(req.body)
 
-    if(!userName && !email){
-        throw new apiError(400,'Username or Email is required')
+    if (!userName && !email) {
+        throw new apiError(400, 'Username or Email is required')
     }
-    if(!password){
-        throw new apiError(400,'Password is required')
+    if (!password) {
+        throw new apiError(400, 'Password is required')
     }
 
     const isUser = await User.findOne({
-        $or:[{email},{userName}]
+        $or: [{ email }, { userName }]
     })
 
-    if(!isUser){
-        throw new apiError(401,'User not Exist')
+    if (!isUser) {
+        throw new apiError(401, 'User not Exist')
     }
-    const ispasswordCorrect=await isUser.isPasswordCorrect(password)
+    const ispasswordCorrect = await isUser.isPasswordCorrect(password)
 
-    if(!ispasswordCorrect){
-        throw new apiError(404,'Password is wrong')
+    if (!ispasswordCorrect) {
+        throw new apiError(404, 'Password is wrong')
     }
 
-    const accessToken=await isUser.generateAccessToken()
-    const refreshToken=await isUser.generateRefreshTokenToken()
-    if(!accessToken && !refreshToken){
-        throw new apiError(500,'Error while generating tokens')
+    const accessToken = await isUser.generateAccessToken()
+    const refreshToken = await isUser.generateRefreshTokenToken()
+    if (!accessToken && !refreshToken) {
+        throw new apiError(500, 'Error while generating tokens')
     }
-    isUser.refreshToken=refreshToken
-    await isUser.save({validateBeforeSave:false})
+    isUser.refreshToken = refreshToken
+    await isUser.save({ validateBeforeSave: false })
 
-    const user=await User.findById(isUser._id).select('-password -refreshToken')
-     
+    const user = await User.findById(isUser._id).select('-password -refreshToken')
+
     const options = {
-        httpOnly:true,
-        secure:true
+        httpOnly: true,
+        secure: true
     }
 
     return res.status(200)
-    .cookie('accessToken',accessToken,options)
-    .cookie( 'refreshToken' ,refreshToken,options)
-    .json(
-        new apiResponse(
-            200,
-        {user:user,accessToken,refreshToken},
-        'User logged in successfully'
+        .cookie('accessToken', accessToken, options)
+        .cookie('refreshToken', refreshToken, options)
+        .json(
+            new apiResponse(
+                200,
+                { user: user, accessToken, refreshToken },
+                'User logged in successfully'
+            )
         )
-    )
 })
 
-const logoutUser =asyncHandler(async(req,res)=>{
+const logoutUser = asyncHandler(async (req, res) => {
 
-    const id=req.user._id
-    await  User.findByIdAndUpdate(
+    const id = req.user._id
+    await User.findByIdAndUpdate(
         id,
         {
-            $unset:{
-                refreshToken:1
+            $unset: {
+                refreshToken: 1
             }
         },
         {
-            new:true
+            new: true
         }
     )
     const options = {
-        httpOnly:true,
-        secure:true
+        httpOnly: true,
+        secure: true
     }
 
     return res.status(200)
-    .clearCookie('accessToken',options)
-    .clearCookie('refreshToken',options)
-    .json(
-        new apiResponse(
-            200,
-            {},
-            'Logged out successfully'
+        .clearCookie('accessToken', options)
+        .clearCookie('refreshToken', options)
+        .json(
+            new apiResponse(
+                200,
+                {},
+                'Logged out successfully'
+            )
         )
-    )
 })
 
-const getUserDetails = asyncHandler(async(req,res)=>{
+const getUserDetails = asyncHandler(async (req, res) => {
 
     console.log(req.user)
-    const user= req.user
+    const user = req.user
     return res.status(200)
-    .json(new apiResponse(200,{user:user},"fetched"))
+        .json(new apiResponse(200, { user: user }, "fetched"))
 })
 
-const refreshaccessToken = asyncHandler(async(req,res)=>{
+const refreshaccessToken = asyncHandler(async (req, res) => {
 
     const inconimgRefreshToken = req.cookie?.refreshToken || req.body.refreshToken
-    if(!inconimgRefreshToken){
-        throw new apiError(404,'Unauthorized request')
+    if (!inconimgRefreshToken) {
+        throw new apiError(404, 'Unauthorized request')
     }
 
     try {
-        const token =jwt.verify(inconimgRefreshToken,process.env.REFRESH_TOKEN_SERET)
-    
-        if(!token){
-            throw new apiError(404,'Token is not valid')
+        const token = jwt.verify(inconimgRefreshToken, process.env.REFRESH_TOKEN_SERET)
+
+        if (!token) {
+            throw new apiError(404, 'Token is not valid')
         }
-    
+
         const id = token._id
         const isUser = await User.findById(id)
-        if(inconimgRefreshToken !==isUser?.refreshToken){
-            throw new apiError(404,'Invalid refresh token')
+        if (inconimgRefreshToken !== isUser?.refreshToken) {
+            throw new apiError(404, 'Invalid refresh token')
         }
-        
-        const accessToken=await isUser.generateAccessToken()
-        const refreshToken=await isUser.generateRefreshTokenToken()
-        if(!accessToken && !refreshToken){
-            throw new apiError(500,'Error while generating tokens')
+
+        const accessToken = await isUser.generateAccessToken()
+        const refreshToken = await isUser.generateRefreshTokenToken()
+        if (!accessToken && !refreshToken) {
+            throw new apiError(500, 'Error while generating tokens')
         }
-        isUser.refreshToken=refreshToken
-        await isUser.save({validateBeforeSave:false})
-    
+        isUser.refreshToken = refreshToken
+        await isUser.save({ validateBeforeSave: false })
+
         const options = {
-            httpOnly:true,
-            secure:true
+            httpOnly: true,
+            secure: true
         }
         return res.status(200)
-        .cookie('accessToken',accessToken,options)
-        .cookie('refreshToken',refreshToken,options)
-        .json(new apiResponse(
-            200,
-            {accessToken,refreshToken},
-            'Access Token Fetched Successfully'
-        ))
+            .cookie('accessToken', accessToken, options)
+            .cookie('refreshToken', refreshToken, options)
+            .json(new apiResponse(
+                200,
+                { accessToken, refreshToken },
+                'Access Token Fetched Successfully'
+            ))
     } catch (error) {
-        throw new apiError(404,'Invalid Refresh Token')
+        throw new apiError(404, 'Invalid Refresh Token')
     }
 })
 
-const getChannelDetail = asyncHandler(async(req,res)=>{
+const getChannelDetail = asyncHandler(async (req, res) => {
 
-    const {userName,userId,videoId} = req.body
-    console.log(req.body)
-    if(!userName?.trim()){
-        throw new apiError(404,'Username not found')
+    const { userName, userId, videoId } = req.body
+    if (!userName?.trim()) {
+        throw new apiError(404, 'Username not found')
     }
 
-    const channel =await User.aggregate([
+    const channel = await User.aggregate([
         {
-            $match:{
-                userName:userName.trim()
+            $match: {
+                userName: userName.trim()
             }
         },
         {
-            $lookup:{
-                from:"subscriptions",
-                localField:'_id',
-                foreignField:'channel',
-                as:'subscribers'
+            $lookup: {
+                from: "subscriptions",
+                localField: '_id',
+                foreignField: 'channel',
+                as: 'subscribers'
             }
         },
         {
-            $lookup:{
-                from:'subscriptions',
-                localField:'_id',
-                foreignField:'subscriber',
-                as:'subscribedTo'
+            $lookup: {
+                from: 'subscriptions',
+                localField: '_id',
+                foreignField: 'subscriber',
+                as: 'subscribedTo'
             }
         },
         {
-            $addFields:{
-                subscriberCount:{
-                    $size:"$subscribers"
+            $addFields: {
+                subscriberCount: {
+                    $size: "$subscribers"
                 },
-                channelSubscribedToCount:{
-                    $size:"$subscribedTo"
+                channelSubscribedToCount: {
+                    $size: "$subscribedTo"
                 },
-                isSubscriber:{
-                    $cond:{
-                        if:{
-                            $in:[
-                                new mongoose.Types.ObjectId(userId),{$map:{input:'$subscribers',as:'sub',in:'$$sub.subscriber'}}
+                isSubscriber: {
+                    $cond: {
+                        if: {
+                            $in: [
+                                new mongoose.Types.ObjectId(userId), { $map: { input: '$subscribers', as: 'sub', in: '$$sub.subscriber' } }
                             ]
                         },
-                        then:true,
-                        else:false
+                        then: true,
+                        else: false
                     }
                 }
             }
         },
         {
-            $project:{
-                userName:1,
-                fullName:1,
-                email:1,
-                avatar:1,
-                coverImage:1,
-                subscriberCount:1,
-                channelSubscribedToCount:1,
-                isSubscriber:1
+            $project: {
+                userName: 1,
+                fullName: 1,
+                email: 1,
+                avatar: 1,
+                coverImage: 1,
+                subscriberCount: 1,
+                channelSubscribedToCount: 1,
+                isSubscriber: 1
             }
         }
     ])
 
-    if(videoId){
-        const {likes,isLiked} = await likeCount(videoId,userId)
-        channel[0].totalLikes=likes
-        channel[0].isLiked=isLiked
+    if (videoId) {
+        const { likes, isLiked } = await likeCount(videoId, userId)
+        channel[0].totalLikes = likes
+        channel[0].isLiked = isLiked
     }
 
-    if(!channel?.length){
-        throw new apiError(404,'Channel not exist')
+    if (!channel?.length) {
+        throw new apiError(404, 'Channel not exist')
     }
     return res.status(200)
-    .json(
-        new apiResponse(
-            200,
-            channel[0],
-            "Account fetched successfully"
+        .json(
+            new apiResponse(
+                200,
+                channel[0],
+                "Account fetched successfully"
+            )
         )
-    )
 })
 
-const addHistory = asyncHandler(async(req,res)=>{
-    const {userId,videoId,shortId} = req.body
+const addHistory = asyncHandler(async (req, res) => {
+    const { userId, videoId, shortId } = req.body
 
-    if(!userId){
-        throw new apiError(400,'User not found')
+    if (!userId) {
+        throw new apiError(400, 'User not found')
     }
-    if(!videoId && !shortId){
-        throw new apiError(400,'Nothing to add in history')
+    if (!videoId && !shortId) {
+        throw new apiError(400, 'Nothing to add in history')
     }
     try {
-        const user =await User.findById(userId)
-        console.log('yaha',user)
-        if(!user){
-            throw new apiError(404,'No user found')
+        const user = await User.findById(userId)
+        console.log('yaha', user)
+        if (!user) {
+            throw new apiError(404, 'No user found')
         }
 
-        if(videoId){
-            const videoObjectId=new mongoose.Types.ObjectId(videoId)
-            if(!user.watchHistoryVideo.includes( videoObjectId)){
-                user.watchHistoryVideo.push( videoObjectId)
+        if (videoId) {
+            const videoObjectId = new mongoose.Types.ObjectId(videoId)
+            if (!user.watchHistoryVideo.includes(videoObjectId)) {
+                user.watchHistoryVideo.push(videoObjectId)
             }
-            else{
-                throw new apiError(400,'Video already in watchHistory')
+            else {
+                throw new apiError(400, 'Video already in watchHistory')
             }
         }
-        if(shortId){
-            const shortObjectId= new mongoose.Types.ObjectId(shortId)
-            if(!user.watchHistoryShort.includes(shortObjectId)){
-                 user.watchHistoryShort.push(shortObjectId)
+        if (shortId) {
+            const shortObjectId = new mongoose.Types.ObjectId(shortId)
+            if (!user.watchHistoryShort.includes(shortObjectId)) {
+                user.watchHistoryShort.push(shortObjectId)
             }
-            else{
-                throw new apiError(400,'Short already in watchHistory')
+            else {
+                throw new apiError(400, 'Short already in watchHistory')
             }
         }
         await user.save()
         return res.status(200)
-        .json(new apiResponse(200,{},'Watch history updated'))
-    } 
+            .json(new apiResponse(200, {}, 'Watch history updated'))
+    }
     catch (error) {
         console.log(error.message)
     }
 })
-const getWatchHistory = asyncHandler(async(req,res)=>{
+const getWatchHistory = asyncHandler(async (req, res) => {
 
-    const {userId} =req.body
+    const { userId } = req.body
     try {
         const user = await User.aggregate([
             {
-                $match:{
-                    _id:new mongoose.Types.ObjectId(userId)
+                $match: {
+                    _id: new mongoose.Types.ObjectId(userId)
                 }
             },
             {
-                $lookup:{
-                    from:"videos",
-                    localField:'watchHistoryVideo',
-                    foreignField:'_id',
-                    as:'watchHistoryVideo',
-                    pipeline:[
+                $lookup: {
+                    from: "videos",
+                    localField: 'watchHistoryVideo',
+                    foreignField: '_id',
+                    as: 'watchHistoryVideo',
+                    pipeline: [
                         {
-                           $lookup:{
-                            from:'users',
-                            localField:'owner',
-                            foreignField:'_id',
-                            as:'owner',
-                            pipeline:[
-                                {
-                                   $project:{
-                                    userName:1,
-                                    fullName:1,
-                                    avatar:1
-                                   } 
-                                }
-                            ]
-                           } 
-                        },
-                        {
-                            $addFields:{
-                                owner:{
-                                    $first:"$owner"
-                                }
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                $lookup:{
-                    from:'shorts',
-                    localField:'watchHistoryShort',
-                    foreignField:'_id',
-                    as:'watchHistoryShort',
-                    pipeline:[
-                        {
-                            $lookup:{
-                                from:'users',
-                                localField:'owner',
-                                foreignField:'_id',
-                                as:'owner',
-                                pipeline:[
+                            $lookup: {
+                                from: 'users',
+                                localField: 'owner',
+                                foreignField: '_id',
+                                as: 'owner',
+                                pipeline: [
                                     {
-                                        $project:{
-                                            avatar:1,
-                                            userName:1,
+                                        $project: {
+                                            userName: 1,
+                                            fullName: 1,
+                                            avatar: 1
                                         }
                                     }
                                 ]
                             }
-                            
                         },
                         {
-                            $addFields:{
-                                owner:{
-                                    $first:'$owner'
+                            $addFields: {
+                                owner: {
+                                    $first: "$owner"
                                 }
                             }
                         }
@@ -410,236 +375,270 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
                 }
             },
             {
-                $project:{
-                    watchHistoryVideo:1,
-                    watchHistoryShort:1
+                $lookup: {
+                    from: 'shorts',
+                    localField: 'watchHistoryShort',
+                    foreignField: '_id',
+                    as: 'watchHistoryShort',
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'users',
+                                localField: 'owner',
+                                foreignField: '_id',
+                                as: 'owner',
+                                pipeline: [
+                                    {
+                                        $project: {
+                                            avatar: 1,
+                                            userName: 1,
+                                        }
+                                    }
+                                ]
+                            }
+
+                        },
+                        {
+                            $addFields: {
+                                owner: {
+                                    $first: '$owner'
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    watchHistoryVideo: 1,
+                    watchHistoryShort: 1
                 }
             }
         ])
         return res.status(200)
-        .json(new apiResponse(
-            200,
-            user[0],
-            'WatchHistory Fetched Successfully'
-        ))
+            .json(new apiResponse(
+                200,
+                user[0],
+                'WatchHistory Fetched Successfully'
+            ))
     } catch (error) {
         console.log(error.message)
     }
 
 })
 
-const getChannelAnalysis = asyncHandler(async(req,res)=>{
+const getChannelAnalysis = asyncHandler(async (req, res) => {
 
-    const {userId} =req.body
-    
-    if(!userId){
-        throw new apiError(400,'user not found')
+    const { userId } = req.body
+
+    if (!userId) {
+        throw new apiError(400, 'user not found')
     }
     try {
-        const totalLike=await Like.countDocuments({
-            owner:userId
+        const totalLike = await Like.countDocuments({
+            owner: userId
         })
-        const totalSubscribers=await Subscription.countDocuments({
-            channel:userId
+        const totalSubscribers = await Subscription.countDocuments({
+            channel: userId
         })
-        const totalVideos=await Video.aggregate([
+        const totalVideos = await Video.aggregate([
             {
-                $match:{
-                    owner:new mongoose.Types.ObjectId(userId)
+                $match: {
+                    owner: new mongoose.Types.ObjectId(userId)
                 }
             },
             {
-                $group:{
-                    _id:null,
-                    totalVideo:{$sum:1},
-                    videos:{$push:'$$ROOT'}
+                $group: {
+                    _id: null,
+                    totalVideo: { $sum: 1 },
+                    videos: { $push: '$$ROOT' }
                 }
             },
             {
-                $project:{
-                    _id:0,
-                    videos:1,
-                    totalVideo:1
+                $project: {
+                    _id: 0,
+                    videos: 1,
+                    totalVideo: 1
                 }
             }
         ])
-        const totalShorts=await Short.aggregate([
+        const totalShorts = await Short.aggregate([
             {
-                $match:{
-                    owner:new mongoose.Types.ObjectId(userId)
+                $match: {
+                    owner: new mongoose.Types.ObjectId(userId)
                 }
             },
             {
-                $group:{
-                    _id:null,
-                    totalShort:{$sum:1},
-                    short:{$push:'$$ROOT'}
+                $group: {
+                    _id: null,
+                    totalShort: { $sum: 1 },
+                    short: { $push: '$$ROOT' }
                 }
             },
             {
-                $project:{
-                    _id:0,
-                    totalShort:1,
-                    short:1
+                $project: {
+                    _id: 0,
+                    totalShort: 1,
+                    short: 1
                 }
             }
         ])
 
         return res.status(200)
-        .json(
-            new apiResponse(201,{totalLike,totalSubscribers,totalVideos,totalShorts},'Information fetched successfully')
-        )
+            .json(
+                new apiResponse(201, { totalLike, totalSubscribers, totalVideos, totalShorts }, 'Information fetched successfully')
+            )
     } catch (error) {
-        throw new apiError(500,'Cant get information')
+        throw new apiError(500, 'Cant get information')
     }
 })
 
-const addWatchLater = asyncHandler(async(req,res)=>{
+const addWatchLater = asyncHandler(async (req, res) => {
 
-    const {videoId,userId} = req.body
+    const { videoId, userId } = req.body
 
-    if(!videoId){
-        throw new apiError(400,'Nothing to add in later')
+    if (!videoId) {
+        throw new apiError(400, 'Nothing to add in later')
     }
     const user = await User.findById(userId)
 
-    if(!user){
-        throw new apiError(400,'No user found')
+    if (!user) {
+        throw new apiError(400, 'No user found')
     }
     try {
         const video = new mongoose.Types.ObjectId(videoId)
-        if(!user.watchLater.includes(video)){
+        if (!user.watchLater.includes(video)) {
             user.watchLater.push(video)
 
             await user.save()
             return res.status(200)
-            .json( new apiResponse(200,{},"Added to later"))
+                .json(new apiResponse(200, {}, "Added to later"))
         }
-        else{
+        else {
             user.watchLater.pull(video)
             await user.save()
             return res.status(200)
-            .json(new apiResponse (200,{},"Removed from later"))
+                .json(new apiResponse(200, {}, "Removed from later"))
         }
     } catch (error) {
         return res.status(500)
-        .json(new apiResponse(500,{},"server error try later"))
+            .json(new apiResponse(500, {}, "server error try later"))
     }
 })
 
-const getWatchLater = asyncHandler(async(req,res)=>{
+const getWatchLater = asyncHandler(async (req, res) => {
 
-    const {userId} = req.body
+    const { userId } = req.body
     console.log(req.body)
-    if(!userId){
-        throw new apiError(400,'No user found')
+    if (!userId) {
+        throw new apiError(400, 'No user found')
     }
 
     try {
         const laterDetail = await User.aggregate([
             {
-                $match:{
+                $match: {
                     _id: new mongoose.Types.ObjectId(userId)
                 }
             },
             {
-               $lookup:{
-                    from:'videos',
-                    localField:'watchLater',
-                    foreignField:'_id',
-                    as:'watchLater',
-                    pipeline:[
+                $lookup: {
+                    from: 'videos',
+                    localField: 'watchLater',
+                    foreignField: '_id',
+                    as: 'watchLater',
+                    pipeline: [
                         {
-                            $lookup:{
-                                from:'users',
-                                localField:'owner',
-                                foreignField:'_id',
-                                as:'owner',
-                                pipeline:[
+                            $lookup: {
+                                from: 'users',
+                                localField: 'owner',
+                                foreignField: '_id',
+                                as: 'owner',
+                                pipeline: [
                                     {
-                                        $project:{
-                                            userName:1,
-                                            avatar:1
+                                        $project: {
+                                            userName: 1,
+                                            avatar: 1
                                         }
                                     }
                                 ]
                             }
                         },
                         {
-                            $addFields:{
-                                owner:{
-                                    $first:"$owner"
+                            $addFields: {
+                                owner: {
+                                    $first: "$owner"
                                 }
                             }
                         },
                         {
-                            $project:{
-                                owner:1,
-                                thumbnail:1,
-                                title:1,
-                                views:1
+                            $project: {
+                                owner: 1,
+                                thumbnail: 1,
+                                title: 1,
+                                views: 1
                             }
                         }
                     ]
-                } 
+                }
             },
             {
-                $project:{
-                    watchLater:1
+                $project: {
+                    watchLater: 1
                 }
             }
         ]).exec()
         return res.status(200)
-        .json( new apiResponse(200,laterDetail,"Videos fetched sucessfully"))
+            .json(new apiResponse(200, laterDetail, "Videos fetched sucessfully"))
     } catch (error) {
         return res.status(500)
-        .json(new apiResponse(500,{},"Unable to get videos"))
+            .json(new apiResponse(500, {}, "Unable to get videos"))
     }
 })
 
-const addPlayList= asyncHandler(async(req,res)=>{
+const addPlayList = asyncHandler(async (req, res) => {
 
-    const {userId} = req.body
+    const { userId } = req.body
 
-    if(!userId){
-        throw new apiError(400,"userId required")
+    if (!userId) {
+        throw new apiError(400, "userId required")
     }
 
-    const user =await User.findById(userId)
+    const user = await User.findById(userId)
 
-    if(!user){
-        throw new apiError(400,"No user found")
+    if (!user) {
+        throw new apiError(400, "No user found")
     }
 
-    
+
 })
 
-const getSubscription = asyncHandler(async(req,res)=>{
+const getSubscription = asyncHandler(async (req, res) => {
 
-    const {userId} = req.body
+    const { userId } = req.body
     console.log(userId)
-    if(!userId){
-        throw new apiError(400,'No Id found')
+    if (!userId) {
+        throw new apiError(400, 'No Id found')
     }
     try {
-        
+
         const channels = await Subscription.aggregate([
             {
-                $match:{
+                $match: {
                     subscriber: new mongoose.Types.ObjectId(userId)
                 }
             },
             {
-                $lookup:{
-                    from:'users',
-                    localField:'channel',
-                    foreignField:'_id',
-                    as:'channel',
-                    pipeline:[
+                $lookup: {
+                    from: 'users',
+                    localField: 'channel',
+                    foreignField: '_id',
+                    as: 'channel',
+                    pipeline: [
                         {
-                            $project:{
-                                userName:1,
-                                avatar:1,
+                            $project: {
+                                userName: 1,
+                                avatar: 1,
                             }
                         }
                     ]
@@ -647,65 +646,204 @@ const getSubscription = asyncHandler(async(req,res)=>{
             }
         ])
         return res.status(200)
-        .json(new apiResponse(200,channels,"fetched successfully"))
+            .json(new apiResponse(200, channels, "fetched successfully"))
 
     } catch (error) {
         console.log(error.message)
         return res.status(500)
-        .json( new apiResponse(500,{},"Server error"))
+            .json(new apiResponse(500, {}, "Server error"))
     }
 })
 
-const getChannelVideos = asyncHandler(async(req,res)=>{
-    
-    const {ownerId}=req.body
-    console.log(req.body)
-    if(!ownerId){
-        throw new apiError(400,"No ownerId found")
+const getChannelVideos = asyncHandler(async (req, res) => {
+
+    const { ownerId } = req.body
+    if (!ownerId) {
+        throw new apiError(400, "No ownerId found")
     }
     try {
         const channelInfo = await Video.aggregate([
             {
-                $match:{
-                    owner:new mongoose.Types.ObjectId(ownerId)
+                $match: {
+                    owner: new mongoose.Types.ObjectId(ownerId)
                 }
             },
             {
-                $lookup:{
-                    from:'users',
-                    localField:'owner',
-                    foreignField:'_id',
-                    as:'owner',
-                    pipeline:[
+                $lookup: {
+                    from: 'users',
+                    localField: 'owner',
+                    foreignField: '_id',
+                    as: 'owner',
+                    pipeline: [
                         {
-                            $project:{
-                                userName:1,
-                                avatar:1,
-                                _id:0
+                            $project: {
+                                userName: 1,
+                                avatar: 1,
+                                _id: 0
                             }
                         }
                     ]
                 }
             },
             {
-                $project:{
-                    thumbnail:1,
-                    views:1,
-                    title:1,
-                    owner:1
+                $project: {
+                    thumbnail: 1,
+                    views: 1,
+                    title: 1,
+                    owner: 1
                 }
             }
-            
+
         ])
         return res.status(200)
-        .json(new apiResponse(200,channelInfo,"Success"))
+            .json(new apiResponse(200, channelInfo, "Success"))
     } catch (error) {
-        
+        return res.status(500)
+            .json(new apiResponse(500, {}, "Server error"))
+    }
+})
+
+const updateImage = asyncHandler(async (req, res) => {
+
+    const userId = req.user._id
+    const fieldname = req.file?.fieldname
+    const file = req.file.path
+
+    if (!fieldname || !userId) {
+        throw new apiError(404, "files are missing")
+    }
+
+    const user = await User.findById(String(userId))
+
+    if (!user) {
+        throw new apiError(400, 'No user found')
+    }
+
+    try {
+        if (fieldname) {
+            if (fieldname == 'avatar') {
+
+
+                let initialAvatar;
+                if(user.avatar){
+                    initialAvatar = user.avatar
+                }
+
+                const formatedName = initialAvatar?.split("/")
+                const displayName = formatedName?.pop()
+                const publicId = displayName?.split('.')[0]
+
+                const newAvatar = await cloudnaryUpload(file)
+                const newUrl = newAvatar.url
+                const updated = await User.findByIdAndUpdate(
+                    userId,
+                    {
+                        $set: {
+                            avatar: newUrl,
+                        },
+                    },
+                    {
+                        new: true
+                    }
+                )
+                if (initialAvatar) {
+                    await cloudnaryDelete(publicId)
+                }
+                return res.status(200)
+                    .json(new apiResponse(200, updated, "Update sucessfully"))
+            }
+
+            else if (fieldname == 'coverImage') {
+
+
+                let initialCoverImage;
+                if(user.coverImage){
+                    initialCoverImage = user.coverImage
+                }
+
+                const formatedName = initialCoverImage?.split("/")
+                const displayName = formatedName?.pop()
+                const publicId = displayName?.split('.')[0]
+
+                const newCoverImage = await cloudnaryUpload(file)
+                const newUrl = newCoverImage.url
+
+                const updated = await User.findByIdAndUpdate(
+                    userId,
+                    {
+                        $set: {
+                            coverImage: newUrl,
+                        },
+                    },
+                    {
+                        new: true
+                    }
+                )
+                if (initialCoverImage) {
+                    await cloudnaryDelete(publicId)
+                }
+                return res.status(200)
+                    .json(new apiResponse(200, updated, "Update sucessfully"))
+            }
+        }
+    }
+    catch (error) {
+    return res.status(500)
+        .json(new apiResponse(500, {}, "Server error"))
+    }
+
+})
+
+const editDetails = asyncHandler(async(req,res)=>{
+    const {userName,fullName} =req.body
+    const userId = req.user._id
+    if(!userName && !fullName){
+        throw new apiError(400,"No input data found")
+    }
+    const user = await User.findById(String(userId))
+
+    if(!user){
+        throw new apiError(404,"No user exist")
+    }
+
+    try {
+        if(userName){
+            const updatedUser=await User.findByIdAndUpdate(
+                userId,
+                {
+                    $set:{
+                        userName:userName
+                    }
+                },
+                {
+                    new:true
+                }
+            ).select("-password -refreshToken")
+
+            return res.status(200)
+            .json(new apiResponse(200,updatedUser,"Username updated successfully"))
+        }
+        else if(fullName){
+            const updatedUser=await User.findByIdAndUpdate(
+                userId,
+                {
+                    $set:{
+                        fullName:fullName
+                    }
+                },
+                {
+                    new:true
+                }
+            ).select("-password -refreshToken")
+
+            return res.status(200)
+            .json(new apiResponse(200,updatedUser,"Username updated successfully"))
+        }
+    } catch (error) {
         return res.status(500)
         .json(new apiResponse(500,{},"Server error"))
     }
 })
-
 export {
     registerUser,
     loginUser,
@@ -720,5 +858,7 @@ export {
     addPlayList,
     getSubscription,
     getChannelVideos,
-    getUserDetails
+    getUserDetails,
+    updateImage,
+    editDetails
 }

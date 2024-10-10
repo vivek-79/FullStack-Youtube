@@ -1,0 +1,19 @@
+
+
+.details{
+    width: 97%;
+    position: relative;
+    height: 93vh;
+    border: 1px solid;
+    margin: auto;
+}
+.video-display{
+    height: max(30vh,20vw);
+    width: 100%;
+    border: 1px solid;
+}
+.basic-info{
+    width: 100%;
+    min-height:max(60px,5.5vw);
+    border: 1px solid;
+}

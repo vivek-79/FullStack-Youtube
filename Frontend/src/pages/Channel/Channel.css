@@ -1,7 +1,7 @@
 
 .channel{
     width: 100%;
-    height: 90vh;
+    height: 94vh;
     padding: 10px;
     overflow: auto;
 }
@@ -22,6 +22,7 @@
 
 .cover-image{
     width: 95%;
+    position: relative;
     height: max(15vw,110px);
     margin: auto;
     border-radius: 10px;
@@ -148,6 +149,96 @@
     transition: 0.3s linear;
 }
 
+.other-details  .avatar label{
+    position: absolute;
+    width: 100%;
+    height: 25px;
+    left: 0;
+    bottom: -4px;
+    z-index: 9;
+    background-color: rgba(7, 21, 44, 0.608);
+    backdrop-filter: blur(2px);
+    font-size: 13px;
+    font-weight: 500;
+}
+.other-details  .avatar input{
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    opacity: 0;
+}
+.channel-personal-info .cover-image  label{
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    left: 0;
+    bottom: 0;
+    z-index: 9;
+    background-color: rgba(18, 37, 62, 0.425);
+    backdrop-filter: blur(2px);
+    font-size: 13px;
+    font-weight: 500;
+}
+.channel-personal-info .cover-image  input{
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    opacity: 0;
+}
+
+.edit-name{
+    position: relative;
+    margin-left: 5px;
+    color: rgba(255, 255, 255, 0.438);
+}
+.user-names{
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+.initial-names{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+.initial-names p{
+    display: flex;
+    width: 100%;
+}
+.edit-name{
+    display: flex;
+    align-items: center;
+}
+.edit-name-input{
+    position: absolute;
+    left: 70px;
+    bottom: -10px;
+}
+.edit-name-input input{
+    height: 30px;
+    outline: none;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.425);
+    backdrop-filter: blur(10px);
+    border-radius: 5px 0 0 5px;
+    width: max(20vw,60px);
+}
+.edit-name-input button{
+    height: 30px;
+    background-color:rgb(65, 57, 57);
+    backdrop-filter: blur(10px);
+    outline: none;
+    border: none;
+    width: max(5vw,30px);
+    color: white;
+}
+.edit-name-input button:nth-child(3){
+    background-color: rgb(65, 57, 57);
+    border-left: 2px solid black;
+    border-radius: 0 5px 5px 0;
+    width: max(2vw,20px);
+}
 @media (max-width:900px){
     .other-details .avatar{
         position: relative;

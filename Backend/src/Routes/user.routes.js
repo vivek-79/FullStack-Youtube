@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getChannelDetail, getWatchHistory, loginUser, logoutUser, refreshaccessToken, registerUser,getChannelAnalysis,addHistory ,addWatchLater,getWatchLater,getSubscription,getChannelVideos,getUserDetails} from "../Controllers/user.controller.js";
+import { getChannelDetail, getWatchHistory, loginUser, logoutUser, refreshaccessToken, registerUser,getChannelAnalysis,addHistory ,addWatchLater,getWatchLater,getSubscription,getChannelVideos,getUserDetails,updateImage,editDetails} from "../Controllers/user.controller.js";
 import { upload } from "../Middleware/multer.middleware.js";
 import { verifyLogin } from "../Middleware/auth.middleware.js";
 
@@ -26,4 +26,7 @@ userRouter.route('/get-watch-history').post(verifyLogin,getWatchLater)
 userRouter.route('/get-Subscription').post(verifyLogin,getSubscription)
 userRouter.route('/get-channel-video').post(verifyLogin,getChannelVideos)
 userRouter.route('/get-user-details').get(verifyLogin,getUserDetails)
+userRouter.route('/update-avatar').post(verifyLogin,upload.single('avatar'),updateImage)
+userRouter.route('/update-coverImage').post(verifyLogin,upload.single('coverImage'),updateImage)
+userRouter.route('/edit-details').post(verifyLogin,editDetails)
 export {userRouter}

@@ -193,7 +193,7 @@ header {
 .header-profile #profile-setting{
     width: 120px;
     right: 35px;
-    padding: 5px;
+    padding: 5px 5px 0 5px;
     position: fixed;
     display: flex;
     flex-direction: column;
@@ -207,6 +207,7 @@ header {
 #profile-setting button{
     background-color: black;
     color: white;
+    margin-bottom: 5px;
 }
 @media (min-width:1300px){
     header{

@@ -11,6 +11,7 @@ function Header() {
   const authStatus = useSelector((state) => state.authState.status)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const userAvatar= useSelector((state)=>state.authState?.userData?.data?.user?.avatar)
   const [showSearch, setShowSearch] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
 
@@ -42,6 +43,34 @@ function Header() {
     setShowProfile(false)
     navigate('/login')
   }
+
+  // const handleVoice=()=>{
+  //   console.log('hii')
+  //   window.SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition
+
+  //   if(!window.SpeechRecognition){
+  //     alert('Your browser dont supports voice search')
+  //   }
+  //   const recognition = new SpeechRecognition();
+  //   recognition.lang = 'en-us';
+  //   recognition.interimResults = false
+  //   recognition.start();
+
+
+  //   recognition.addEventListener('result',(event)=>{
+  //     const transcript = event.result[0][0].transcript
+  //     console.log(transcript)
+  //   })
+
+  //   recognition.addEventListener('end',()=>{
+  //     recognition.stop();
+  //   })
+
+  //   recognition.addEventListener('error',(e)=>{
+  //     console.log(e)
+  //   })
+
+  //}
   return (
     <header>
       {/*below-492px*/}
@@ -80,7 +109,7 @@ function Header() {
           {showProfile && <div id='profile-setting'>
             <button onClick={logoutHandler}>Logout</button>
           </div>}
-          <img onClick={() => setShowProfile((prev) => !prev)} src="https://imgs.search.brave.com/4E-FnJGrz16zTTKMxT6IA176mvQocIm8f9MuFxI-Cp0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9kZXNp/Z253aXphcmQuY29t/L2Jsb2cveW91dHVi/ZS10aHVtYm5haWwt/c2l6ZS9yZXNpemUv/YWRkLXRleHQteW91/dHViZS10aHVtYm5h/aWxfMTY1ODc0MTE1/NjEyNF9yZXNpemUu/anBn" alt="" />
+          <img onClick={() => setShowProfile((prev) => !prev)} src={userAvatar} alt="" />
         </div> : <button onClick={() => navigate('/login')}>Login</button>}
       </div>}
     </header>
