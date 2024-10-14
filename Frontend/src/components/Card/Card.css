@@ -80,24 +80,22 @@
     cursor: pointer;
     transform:rotate(90deg);
     font-size: 20px;
-    color: rgba(255, 255, 255, 0.562);
+    color: rgba(255, 255, 255, 0.5);
 }
 .show-option{
     position: absolute;
     bottom: 5px;
     cursor: pointer;
     right: 25px;
-    padding:2px 2px;
+    padding:2px 8px;
     border-radius: 10px;
     font-size: 15px;
     display: flex;
     flex-direction: column;
-    background-color: rgba(255, 255, 255, 0.437);
+    background-color: rgba(255, 255, 255, 0.296);
     backdrop-filter: blur(8px);
 }
 .show-option p{
-    border-bottom: 1px solid rgba(82, 75, 75, 0.762);
-    background-color: rgba(0, 0, 0, 0.085);
     width: 100%;
     text-align: left;
     font-weight: 450;
@@ -112,8 +110,8 @@
     left: 1px;
     position: absolute;
     border: 1px solid rgba(255, 255, 255, 0.177);
-    background-color: rgba(32, 28, 28, 0.818);
-    backdrop-filter: blur(15px);
+    background-color: rgba(114, 108, 108, 0.826);
+    backdrop-filter: blur(10px);
 }
 @media(min-width:1273px){
     .card{
@@ -138,7 +136,7 @@
 }
 @media(max-width:534px){
     .card{
-        width:94vw;
+        width:92vw;
         height: 360px;
         margin-left: 5px;
     }

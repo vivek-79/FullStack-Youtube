@@ -1,10 +1,10 @@
 
 .watch-hist{
-    width: 100%;
+    width: 99vw;
     height: 91.9vh;
     display: flex;
     flex-direction: column;
-    overflow: auto;
+    overflow-x: auto;
     gap: 10px;
 }
 .watch-hist-video{
@@ -41,15 +41,17 @@
 }
 
 .hist-single-elem{
-    overflow: hidden;
-    min-width: 250px;
     height: 92%;
+    width: max(250px,24vw);
+    flex-shrink: 0;
     margin-top: 10px;
     align-self: self-end;
 }
+.hist-single-elem .card{
+    width: 100%;
+}
 .hist-single-elem2{
     min-width: 250px;
-    overflow: hidden;
     border: 1;
     height: 100%;
     align-self: self-end;

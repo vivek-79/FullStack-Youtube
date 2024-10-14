@@ -8,7 +8,8 @@
     gap: 2%;
     padding: 1%;
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.871);
+    background-color: rgba(0, 0, 0, 0.578);
+    border-radius: 15px;
 }
 
 .video::-webkit-scrollbar{
@@ -49,6 +50,7 @@
 .video-play .video{
     width: 100%;
     height: 100%;
+    background-color: transparent;
 }
 .video-play .video video{
     object-fit: fill;
@@ -99,11 +101,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: rgba(247, 217, 147, 0.053);
+    border-radius: 15px;
+    padding: 0 5px 0 0;
 }
 .comp-lower .avatar{
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.403);
+    border: 2px solid rgba(253, 246, 103, 0.403);
     border-radius: 50%;
     overflow: hidden;
 }
@@ -228,7 +233,7 @@
     height: 40px;
     border: none;
     border-radius:0 15px 15px 0;
-    background-color: rgba(40, 40, 225, 0.599);
+    background-color: rgba(65, 65, 116, 0.182);
     font-size: 17px;
     color: rgba(255, 255, 255, 0.563);
 }
@@ -416,9 +421,6 @@
     object-fit: cover;
     object-position: center;
     border-radius: 10px;
-    box-shadow:2px 2px 2px 2px rgba(255, 255, 255, 0.055),  /* Subtle soft glow */
-    6px 6px 6px 20px rgba(255, 255, 255, 0.075),  /* Slightly larger glow */
-    8px 8px 8px 20px rgba(0, 0, 0, 0.816);
 }
 
 .bar{

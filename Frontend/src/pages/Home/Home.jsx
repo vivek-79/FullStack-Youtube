@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from 'react'
-import { Aside, Card } from '../../components'
+import { Card } from '../../components'
 import './Home.css'
 import Navbar from '../../components/Navbar/Navbar'
 import axios from 'axios'
@@ -35,7 +35,7 @@ function Home() {
               views={data.views}
               video={data.videoFile}
               videoId={data._id}
-              owner={data.owner.fullName}
+              owner={data.owner.userName}
               avatar={data.owner.avatar}
             />
             ))}

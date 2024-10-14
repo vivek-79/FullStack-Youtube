@@ -5,6 +5,7 @@
     height: 90vh;
     padding: 2vw;
     overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.589);
 }
 .shorts::-webkit-scrollbar{
     width: 2px;

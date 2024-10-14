@@ -78,10 +78,10 @@
     color: white;
 }
 .other-channel-info{
-    background-color: rgba(89, 105, 113, 0.385);
+    background-color: rgba(89, 105, 113, 0.189);
     border-radius: 15px;
     margin-top: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.364);
+    border: 1px solid rgba(255, 255, 255, 0.158);
     backdrop-filter: blur(15px);
     min-height: 120px;
     width: 100%;

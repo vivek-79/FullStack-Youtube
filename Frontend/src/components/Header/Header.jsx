@@ -86,8 +86,8 @@ function Header() {
       {/* above 492px */}
       {!showSearch && <div className='header-side'>
         <i onClick={() => dispatch(toggl())} className="ri-list-check"></i>
-        <i className="ri-play-large-fill imge"></i>
-        <Link className='Link' to="/home"><h2>Youtube</h2></Link>
+        {/* <img src="./public/icon.png" alt="logo" /> */}
+        <Link className='Link' to="/home"><h2>ViewVerse</h2></Link>
       </div>}
       <div className="header-center">
         <div className='header-search'>

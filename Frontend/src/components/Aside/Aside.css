@@ -3,10 +3,11 @@
     flex-direction: column;
     padding: 5px;
     align-items:start;
-    padding: 5px 15px;
+    padding: 5px 0;
     gap: 5px;
     overflow: auto;
-    background-color: black;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
 }
 .aside-home ::-webkit-scrollbar{
     display: none;
@@ -23,10 +24,10 @@
 }
 
 .option:hover{
-    background-color:  rgba(32, 31, 31, 0.534);
+    background-color:  rgba(200, 182, 164, 0.274);
 }
 .active{
-    background-color:  rgb(32, 31, 31);
+    background-color:  rgba(233, 220, 187, 0.373);
 }
 .aside-home hr{
     width: 100%;

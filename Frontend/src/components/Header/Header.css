@@ -6,11 +6,11 @@ header {
     margin-left: -30px;
     width: 98vw;
     height: 45px;
-    background-color: black;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 10px;
+
     color: rgba(255, 255, 255, 0.7);
 }
 .header-side{
@@ -54,9 +54,9 @@ header {
 
 .header-center input{
     width:30vw;
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.088);
     outline: none;
-    border: 1px solid rgba(255, 255, 255, 0.392);
+    border: 1px solid rgba(255, 255, 255, 0.111);
     height: 30px;
     border-radius: 15px 0 0 15px;
     color: rgba(255, 255, 255, 0.619);
@@ -70,15 +70,21 @@ header {
     border-radius: 0 15px 15px 0;
     border: 1px solid  rgba(255, 255, 255, 0.392);
     border-left: none;
-    background-color:rgba(46, 43, 43, 0.919);
+    background-color:rgba(46, 43, 43, 0.262);
 }
 .header-center .voices{
     font-size: 20px;
     padding: 3px 6px;
     border-radius: 50%;
-    background-color:rgba(46, 43, 43, 0.919);
+    background-color:rgba(46, 43, 43, 0.321);
 }
-
+.header-side img{
+    position: relative;
+    margin-top: 8px;
+    height: 50px;
+    width: 30px;
+    mix-blend-mode: color-burn;
+}
 .header-side2{
     padding: 0 10px;
     display: flex;
@@ -87,6 +93,9 @@ header {
 }
 .header-side2 i{
     font-size: 20px;
+}
+.header-side h2{
+    font-size: 18px;
 }
 
 .header-side2 button{
@@ -127,7 +136,7 @@ header {
 }
 .add-video p{
     cursor: pointer;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.722);
     border-radius: 5px;
     color: white;
     padding: 5px 30px;
@@ -185,7 +194,7 @@ header {
     border-radius: 0 15px 15px 0;
     border: 1px solid  rgba(255, 255, 255, 0.392);
     border-left: none;
-    background-color:rgba(46, 43, 43, 0.919);
+    background-color:rgba(35, 32, 32, 0.668);
 }
 .header-search-mini{
     display: none;

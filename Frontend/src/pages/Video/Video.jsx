@@ -56,7 +56,6 @@ function Video() {
         axios.post('/v1/videos/getrecomendations', { videoId })
             .then(res => {
                 setRecomended(res?.data?.data)
-                console.log(res)
             })
             .catch(err => {
                 console.error(err.message);
@@ -75,7 +74,6 @@ function Video() {
         const initialComment = () => {
             axios.post('/v1/comment/get-comment', { videoId })
                 .then((res) => {
-                    console.log(res)
                     setAllComment(res.data.data)
                 })
                 .catch((err) => {
@@ -133,7 +131,6 @@ function Video() {
 
         setMore((prev) => !prev)
     }
-    console.log(allComment)
     return (
         <div className='video' id='video'>
             <div className='video-center'>
@@ -207,18 +204,6 @@ function Video() {
             <div className="video-side">
                 {recomended && recomended.map((item) => (
                     <SideCard key={item._id} data={item} />
-
-                ))}
-                {recomended && recomended.map((item) => (
-                    <SideCard data={item} />
-
-                ))}
-                {recomended && recomended.map((item) => (
-                    <SideCard data={item} />
-
-                ))}
-                {recomended && recomended.map((item) => (
-                    <SideCard data={item} />
 
                 ))}
             </div>

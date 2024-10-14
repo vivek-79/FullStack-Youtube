@@ -129,7 +129,6 @@ function Videoplayer({ data }) {
     //full screen
     const [fullScreen, setFullScreen] = useState(false)
     const screenHandle = () => {
-        console.log(fullScreen)
         setFullScreen((prev) => !prev)
     }
 

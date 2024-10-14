@@ -1,19 +1,170 @@
-
-
-.details{
-    width: 97%;
+.details {
+    width: 100vw;
     position: relative;
     height: 93vh;
-    border: 1px solid;
+    overflow-y: auto;
     margin: auto;
 }
-.video-display{
-    height: max(30vh,20vw);
-    width: 100%;
-    border: 1px solid;
+.details::-webkit-scrollbar{
+    width: 4px;
+    background-color: black;
 }
-.basic-info{
+.details::-webkit-scrollbar-thumb{
+    background-color: rgba(255, 255, 255, 0.547);
+    border-radius: 15px;
+}
+.video-display {
+    height: max(35vh, 23vw);
     width: 100%;
-    min-height:max(60px,5.5vw);
-    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.basic-info {
+    width: 100%;
+    min-height: max(60px, 5.5vw);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 10px;
+}
+
+.video-display img {
+    height: 80%;
+    width: 35%;
+    border-radius: 10px;
+}
+
+.video-display p {
+    font-size: max(17px, 1.4vw);
+}
+
+.basic-info .vid-details {
+    width: max(100px, 5vw);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+    background-color: rgba(255, 255, 255, 0.407);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.245);
+}
+
+.vid-details p {
+    font-size: max(17px, 1.4vw);
+}
+
+.editable-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.edit-info {
+    width: 90%;
+    min-height: 20px;
+    margin: auto;
+    position: relative;
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    padding: 0;
+    gap: 5px;
+    background-color: rgba(186, 215, 215, 0.392);
+}
+.edit-info p{
+    text-align: left;
+}
+.edit-btn{
+    width: 90%;
+    margin: auto;
+    border-radius: 15px;
+    border: none;
+    color: aliceblue;
+    background-color: rgba(107, 193, 193, 0.47);
+    padding: 5px 0;
+    font-size: 17px;
+}
+.error{
+    color: rgb(255, 192, 82);
+}
+.edit-info input{
+    height: 30px;
+    background-color: transparent;
+    border:1px solid rgba(255, 255, 255, 0.26);
+    flex-grow: 1;
+    margin-right: 30px;
+    border-radius: 10px;
+    outline: none;
+    font-size: 17px;
+    color: white;
+    padding:7px 0 0 5px;
+}
+
+.edit-info p:nth-child(1) {
+    margin-left: 10px;
+    font-size: 22px;
+    color: rgba(84, 81, 81, 0.536);
+}
+.edit-comments{
+    width: 90%;
+    margin: auto;
+    display: flex;
+    padding: 10px 1px;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+.edit-comments-header{
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.548);
+}
+.each-comnt{
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding:5px;
+    background-color: rgba(255, 255, 255, 0.307);
+    border: 1px solid rgba(255, 255, 255, 0.164);
+    border-radius: 10px;
+    min-height: 20px;
+    position: relative;
+}
+
+.comment-user-info{
+    width: 100%;
+    display: flex;
+    height: 25px;
+}
+.comment-user-info p{
+    color: rgba(255, 255, 255, 0.334);
+    font-weight: 300;
+}
+.comment-user-info img{
+    border-radius: 50%;
+    height: 100%;
+    width: 25px;
+    object-fit: cover;
+    margin-right: 5px;
+}
+.each-comnt p:nth-child(3){
+    transform: rotate(90deg);
+    position: absolute;
+    right: 5px;
+    bottom: -5px;
+    font-size: 25px;
+    color: rgba(255, 255, 255, 0.584);
 }

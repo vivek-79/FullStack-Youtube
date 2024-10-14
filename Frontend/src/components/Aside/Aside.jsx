@@ -1,10 +1,23 @@
 
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import './Aside.css'
+import axios from 'axios'
+import { useSelector } from 'react-redux'
 function Aside() {
 
+    const [channels,setChannels] = useState([])
+    const userId = useSelector((state) => state.authState.userData?.data?.user?._id)
+    useEffect(()=>{
+        axios.get('/v1/users/subscribed')
+        .then((res)=>{
+            setChannels(res.data?.data?.[0].channel)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    },[userId])
     const asideOptions = [
         {
             name: 'Home',
@@ -27,14 +40,6 @@ function Aside() {
             'Playlists',
             'Watch later',
         ]
-    const subscription = [
-        'Harry',
-        'Potter',
-        'Raja',
-        'Arijit',
-        'Diljit',
-        'Coding'
-    ]
 
     return (
         <aside>
@@ -47,9 +52,9 @@ function Aside() {
                     <NavLink to={`/${element}`}  className={({ isActive }) => (isActive ? 'option active' : 'option')} key={element}>{element}</NavLink>
                 ))}
                 <hr />
-                <p>Subscriptions</p>
-                {subscription.map((element) => (
-                    <NavLink to={`/${element}`}  className={({ isActive }) => (isActive ? 'option active' : 'option')} key={element}>{element}</NavLink>
+                <p> Subscriptions</p>
+                {channels && channels.map((element) => (
+                    <NavLink to={`/${element}`}  className={({ isActive }) => (isActive ? 'option active' : 'option')} key={element._id}>{element?.userName}</NavLink>
                 ))}
             </div>
         </aside>

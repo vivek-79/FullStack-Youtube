@@ -15,7 +15,7 @@ function PlayPlaylist() {
         <div className='play-playlist'>
             <div className="play-playlist-head">
                 <div className='play-playlist-wallPaper'>
-                    <img src={playList.videos[0].thumbnail} alt="" />
+                    <img src={playList.videos?.[0]?.thumbnail} alt="" />
                 </div>
                 <div className="play-playlist-info">
                     <p>..</p>
@@ -27,10 +27,10 @@ function PlayPlaylist() {
             <div className="play-playlist-content">
             {video && video.map((item)=>(
                 <Card
-                 title={item.title}
-                 thumbnail={item.thumbnail}
-                 owner={item.owner[0].userName}
-                 avatar={item.owner[0].avatar}
+                 title={item?.title}
+                 thumbnail={item?.thumbnail}
+                 owner={item?.owner[0].userName}
+                 avatar={item?.owner[0].avatar}
                 />
             ))}
             </div>

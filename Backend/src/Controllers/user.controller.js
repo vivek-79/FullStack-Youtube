@@ -725,7 +725,7 @@ const updateImage = asyncHandler(async (req, res) => {
 
 
                 let initialAvatar;
-                if(user.avatar){
+                if (user.avatar) {
                     initialAvatar = user.avatar
                 }
 
@@ -757,7 +757,7 @@ const updateImage = asyncHandler(async (req, res) => {
 
 
                 let initialCoverImage;
-                if(user.coverImage){
+                if (user.coverImage) {
                     initialCoverImage = user.coverImage
                 }
 
@@ -788,61 +788,98 @@ const updateImage = asyncHandler(async (req, res) => {
         }
     }
     catch (error) {
-    return res.status(500)
-        .json(new apiResponse(500, {}, "Server error"))
+        return res.status(500)
+            .json(new apiResponse(500, {}, "Server error"))
     }
 
 })
 
-const editDetails = asyncHandler(async(req,res)=>{
-    const {userName,fullName} =req.body
+const editDetails = asyncHandler(async (req, res) => {
+    const { userName, fullName } = req.body
     const userId = req.user._id
-    if(!userName && !fullName){
-        throw new apiError(400,"No input data found")
+    if (!userName && !fullName) {
+        throw new apiError(400, "No input data found")
     }
     const user = await User.findById(String(userId))
 
-    if(!user){
-        throw new apiError(404,"No user exist")
+    if (!user) {
+        throw new apiError(404, "No user exist")
     }
 
     try {
-        if(userName){
-            const updatedUser=await User.findByIdAndUpdate(
+        if (userName) {
+            const updatedUser = await User.findByIdAndUpdate(
                 userId,
                 {
-                    $set:{
-                        userName:userName
+                    $set: {
+                        userName: userName
                     }
                 },
                 {
-                    new:true
+                    new: true
                 }
             ).select("-password -refreshToken")
 
             return res.status(200)
-            .json(new apiResponse(200,updatedUser,"Username updated successfully"))
+                .json(new apiResponse(200, updatedUser, "Username updated successfully"))
         }
-        else if(fullName){
-            const updatedUser=await User.findByIdAndUpdate(
+        else if (fullName) {
+            const updatedUser = await User.findByIdAndUpdate(
                 userId,
                 {
-                    $set:{
-                        fullName:fullName
+                    $set: {
+                        fullName: fullName
                     }
                 },
                 {
-                    new:true
+                    new: true
                 }
             ).select("-password -refreshToken")
 
             return res.status(200)
-            .json(new apiResponse(200,updatedUser,"Username updated successfully"))
+                .json(new apiResponse(200, updatedUser, "Username updated successfully"))
         }
+    } catch (error) {
+        return res.status(500)
+            .json(new apiResponse(500, {}, "Server error"))
+    }
+})
+
+const getSubscribed = asyncHandler(async (req, res) => {
+
+    const { _id } = req.user
+
+    try {
+        const result = await Subscription.aggregate([
+            {
+                $match: {
+                    subscriber: _id
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'channel',
+                    foreignField: '_id',
+                    as: 'channel',
+                    pipeline: [
+                        {
+                            $project: {
+                                userName: 1
+                            }
+                        }
+                    ]
+                }
+            }
+        ])
+
+        return res.status(200)
+        .json(new apiResponse(200,result,"Fetched successfully"))
     } catch (error) {
         return res.status(500)
         .json(new apiResponse(500,{},"Server error"))
     }
+
 })
 export {
     registerUser,
@@ -860,5 +897,6 @@ export {
     getChannelVideos,
     getUserDetails,
     updateImage,
-    editDetails
+    editDetails,
+    getSubscribed
 }

@@ -13,7 +13,6 @@ function Register() {
     const navigate=useNavigate()
     const dispatch = useDispatch()
     const signup=(data)=>{
-      console.log(data)
       const formData= new FormData()
       formData.append('fullName',data.fullName);
       formData.append('userName',data.userName);
